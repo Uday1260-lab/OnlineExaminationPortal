@@ -9,7 +9,9 @@
 <title>Users Management Application</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+	rel="stylesheet">
 
 <style>
 * {
@@ -90,10 +92,10 @@ body {
 	margin-left: 5rem;
 	margin-bottom: 1rem;
 }
-.list-hr {
-margin-bottom: 2rem;
-border-color: #A760FF;
 
+.list-hr {
+	margin-bottom: 2rem;
+	border-color: #A760FF;
 }
 
 .list-add-new-btn:link, .list-add-new-btn:visited {
@@ -107,73 +109,90 @@ border-color: #A760FF;
 	transition: all 0.2s;
 }
 
-.list-add-new-btn{
-transform: scale(1.1) translateY(-3px);
+.list-add-new-btn {
+	transform: scale(1.1) translateY(-3px);
 }
 
-.list-table{
-text-align: left;
-width: 80%;
-margin-top: 3rem;
-margin-left: 10%;
-margin-right: 10%;
-text-align: center;
+.list-table {
+	text-align: left;
+	width: 80%;
+	margin-top: 3rem;
+	margin-left: 10%;
+	margin-right: 10%;
+	text-align: center;
 }
 
-.list-table-thead{
-background-color: #79DAE8;
-font-size: 1.75rem;
+.list-table-thead {
+	background-color: #79DAE8;
+	font-size: 1.75rem;
 }
 
-.list-table-thead-th{
-line-height: 2;
-border: solid;
-color: #FF6363;
-border-color: #FFBBBB;
+.list-table-thead-th {
+	line-height: 2;
+	border: solid;
+	color: #FF6363;
+	border-color: #FFBBBB;
 }
 
-.list-table-tbody{
-line-height: 2;
-font-size: 1.5rem;
-background-color: #DDDDDD;
-}
-.operations{
-display: flex;
-justify-content: space-around;
-}
-.operations-btn-update:visited, .operations-btn-update:link{
-text-decoration: none;
-width: 5rem;
-color: #EFFFFD;
-background-color: #4D77FF;
-margin-top: 0.2rem;
-margin-bottom: 0.2rem;
-padding: 0.2rem 0.4rem;
-border-radius: 1rem;
-transition: all 0.2s;
-}
-.operations-btn-update:hover{
-color: #E5E3C9;
-background-color: #5463FF;
-transform: scaleX(1.1);
+.list-table-tbody {
+	line-height: 2;
+	font-size: 1.5rem;
+	background-color: #DDDDDD;
 }
 
-.operations-btn-delete:visited, .operations-btn-delete:link{
-text-decoration: none;
-width: 5rem;
-color: #EFFFFD;
-background-color: #FF6363;
-margin-top: 0.2rem;
-margin-bottom: 0.2rem;
-padding: 0.2rem 0.4rem;
-border-radius: 1rem;
-transition: all 0.2s;
+.operations {
+	display: flex;
+	justify-content: space-around;
 }
-.operations-btn-delete:hover{
-color: #E5E3C9;
-background-color: #FF5D5D;
-transform: scaleX(1.1);
+
+.operations-btn-update:visited, .operations-btn-update:link {
+	text-decoration: none;
+	width: 5rem;
+	color: #EFFFFD;
+	background-color: #4D77FF;
+	margin-top: 0.2rem;
+	margin-bottom: 0.2rem;
+	padding: 0.2rem 0.4rem;
+	border-radius: 1rem;
+	transition: all 0.2s;
 }
+
+.operations-btn-update:hover {
+	color: #E5E3C9;
+	background-color: #5463FF;
+	transform: scaleX(1.1);
+}
+
+.operations-btn-delete:visited, .operations-btn-delete:link {
+	text-decoration: none;
+	width: 5rem;
+	color: #EFFFFD;
+	background-color: #FF6363;
+	margin-top: 0.2rem;
+	margin-bottom: 0.2rem;
+	padding: 0.2rem 0.4rem;
+	border-radius: 1rem;
+	transition: all 0.2s;
+}
+
+.operations-btn-delete:hover {
+	color: #E5E3C9;
+	background-color: #FF5D5D;
+	transform: scaleX(1.1);
+}
+.list-welcome{
+margin-top: 10rem;
+height: 10rem;
+}
+
+.list-welcome-h3{
+font-size: 3rem;
+}
+
+.list-welcome-p{
+font-size: 2rem;
+}
+
 </style>
 
 </head>
@@ -192,37 +211,48 @@ transform: scaleX(1.1);
 	</header>
 
 	<div class="list">
-		<h3 class="list-heading">List Of Users</h3>
-		<hr class="list-hr">
-		<a href="<%=request.getContextPath()%>/new" class="list-add-new-btn">Add
-			New Users</a> <br />
-		<table class="list-table">
-			<thead class="list-table-thead">
-				<tr>
-					<th class="list-table-thead-th">ID</th>
-					<th class="list-table-thead-th">Name</th>
-					<th class="list-table-thead-th">Email</th>
-					<th class="list-table-thead-th">Country</th>
-					<th class="list-table-thead-th">Operations</th>
-				</tr>
-			</thead>
-			<tbody class="list-table-tbody">
-				<c:forEach var="user" items="${listUser}">
+		<c:if test="${listUser == null}">
+			<div class="list-welcome">
+				<h3 class="list-welcome-h3">Welcome to User Management Application</h3>
+				<p class="list-welcome-p">To view the users list, Press the User Lists button</p>
+			</div>
+		</c:if>
+		<c:if test="${listUser != null}">
+			<h3 class="list-heading">List Of Users</h3>
+			<hr class="list-hr">
+			<a href="<%=request.getContextPath()%>/new" class="list-add-new-btn">Add
+				New Users</a>
+			<br />
+			<table class="list-table">
+				<thead class="list-table-thead">
 					<tr>
-						<td><c:out value="${user.id}" /></td>
-						<td><c:out value="${user.name}" /></td>
-						<td><c:out value="${user.email}" /></td>
-						<td><c:out value="${user.country}" /></td>
-						<td>
-							<div class="operations">
-								<a href='edit?id=<c:out value="${user.id}" />' class="operations-btn-update">Update</a>
-								<a href='delete?id=<c:out value="${user.id}" />' class="operations-btn-delete">Delete</a>								
-							</div>
-						</td>
+						<th class="list-table-thead-th">ID</th>
+						<th class="list-table-thead-th">Name</th>
+						<th class="list-table-thead-th">Email</th>
+						<th class="list-table-thead-th">Country</th>
+						<th class="list-table-thead-th">Operations</th>
 					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+				</thead>
+				<tbody class="list-table-tbody">
+					<c:forEach var="user" items="${listUser}">
+						<tr>
+							<td><c:out value="${user.id}" /></td>
+							<td><c:out value="${user.name}" /></td>
+							<td><c:out value="${user.email}" /></td>
+							<td><c:out value="${user.country}" /></td>
+							<td>
+								<div class="operations">
+									<a href='edit?id=<c:out value="${user.id}" />'
+										class="operations-btn-update">Edit</a> <a
+										href='delete?id=<c:out value="${user.id}" />'
+										class="operations-btn-delete">Delete</a>
+								</div>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>
 	</div>
 </body>
 </html>

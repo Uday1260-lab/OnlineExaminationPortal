@@ -7,7 +7,9 @@
 <title>Online Examination Portal Login Page</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+	rel="stylesheet">
 <style>
 * {
 	margin: 0;
@@ -55,9 +57,9 @@ body {
 }
 
 .login-section-group {
-display: flex;
-flex-direction: column;
-justify-content: start;
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
 	width: 70%;
 	padding: 2rem 4rem;
 	border-radius: 2rem;
@@ -94,7 +96,7 @@ justify-content: start;
 	height: 5rem;
 	margin-left: 10%;
 	margin-right: 10%;
-	background-color: #4D96FF;	
+	background-color: #4D96FF;
 	border: none;
 	margin-top: 2rem;
 	transition: all 0.2s;
@@ -108,32 +110,50 @@ justify-content: start;
 
 .login-section-group-form-input {
 	border: none;
-	border-bottom: 3px solid #0AA1DD;
+	border-bottom: 2px solid #0AA1DD;
 	padding: 0.5rem 1rem;
 	font-size: 1.5rem;
 	border-radius: 0.5rem;
+	transition: all 0.2s;
 }
-.login-section-group-form-label{
+
+.login-section-group-form-input:focus {
+	outline: none;
+	transform: scale(1.2);
+	border-bottom: 3px solid #1F4690;
+}
+
+.login-section-group-form-input:hover {
+	transform: scale(1.1);
+	border-bottom: 3px solid #3A5BA0;
+}
+
+.login-section-group-form-label {
 	color: #7C3E66;
 	transition: all 0.2s;
 }
-.login-section-group-form-label:hover{;
+
+.login-section-group-form-label:hover {;
 	color: #4D96FF;
+	transform: scale(1.1);
 }
-.login-section-group-form-p{
-font-size: 1.25rem;
-transition: all 0.2s;
-width: max-content;
+
+.login-section-group-form-p {
+	font-size: 1.25rem;
+	transition: all 0.2s;
+	width: max-content;
 }
-.login-section-group-form-p:hover{
-transform: scaleY(1.2) scaleX(1.1);
-color: #4D96FF;
+
+.login-section-group-form-p:hover {
+	transform: scaleY(1.2) scaleX(1.1);
+	color: #4D96FF;
 }
 </style>
 </head>
 <body>
 	<div class="login-page-main">
-		<h1 class="login-page-main-heading">Online Examination Portal Login Page</h1>
+		<h1 class="login-page-main-heading">Online Examination Portal
+			Login Page</h1>
 
 	</div>
 
@@ -143,7 +163,8 @@ color: #4D96FF;
 			<h1 class="login-section-group-heading">Administrator Login Form</h1>
 
 
-			<form class="login-section-group-form" action="adminLogin" method="post">
+			<form class="login-section-group-form" action="adminLogin"
+				method="post">
 
 				<div class="label-input">
 					<label class="login-section-group-form-label">Admin Name: </label><input
@@ -185,8 +206,8 @@ color: #4D96FF;
 						name="adminName" />
 				</div>
 				<div class="label-input">
-					<label class="login-section-group-form-label">User Email:
-					</label><input class="login-section-group-form-input" type="email"
+					<label class="login-section-group-form-label">User Email: </label><input
+						class="login-section-group-form-input" type="email"
 						placeholder="User email here..." required="required"
 						name="adminEmail" />
 				</div>

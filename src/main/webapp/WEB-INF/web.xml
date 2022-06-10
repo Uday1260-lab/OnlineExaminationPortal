@@ -24,4 +24,10 @@
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>com.admin.login.web.LoginServlet</servlet-class>
   </servlet>
+  <servlet>
+    <description></description>
+    <display-name>TopicServlet</display-name>
+    <servlet-name>TopicServlet</servlet-name>
+    <servlet-class>com.admin.topic.web.TopicServlet</servlet-class>
+  </servlet>
 </web-app>

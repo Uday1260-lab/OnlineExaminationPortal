@@ -14,9 +14,9 @@ public class UserDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/userdb?useSSL=false";
 	private String jdbcUsername = "root";
 	private String jdbcPassword = "12345";
-
-	private static final String INSERT_USERS_SQL = "INSERT INTO users (name, email, country) VALUES (?, ?, ?);";
-
+	private String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+	
+	private static final String INSERT_USERS_SQL = "insert into users (name, email, country) values (?, ?, ?);";
 	private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where id =?";
 	private static final String SELECT_ALL_USERS = "select * from users";
 	private static final String DELETE_USERS_SQL = "delete from users where id = ?;";
@@ -28,7 +28,7 @@ public class UserDao {
 	protected Connection getConnection() {
 		Connection connection = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(jdbcDriver);
 			connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

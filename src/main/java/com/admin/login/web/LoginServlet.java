@@ -1,16 +1,15 @@
 package com.admin.login.web;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+import java.io.PrintWriter;
 import com.admin.login.bean.LoginBean;
 import com.admin.login.database.LoginDao;
-import com.mysql.cj.Session;
 
 /**
  * Servlet implementation class LoginServlet
@@ -45,21 +44,29 @@ public class LoginServlet extends HttpServlet {
 		String adminName = request.getParameter("adminName");
 		String adminEmail = request.getParameter("adminEmail");
 		String password = request.getParameter("password");
+		ServletContext context=getServletContext();
 		
 		LoginBean loginBean = new LoginBean();
 		
 		loginBean.setAdminName(adminName);		
 		loginBean.setAdminEmail(adminEmail);
 		loginBean.setPassword(password);
-		
+		response.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		 
+		context.setAttribute("isAdmin",false);
+		context.setAttribute("adminDetails", null);
 		LoginDao loginDao = new LoginDao();
-		if(loginDao.validate(loginBean)) {
-//			request.setAttribute("isAdmin", true);
-//			request.setAttribute("adminDetails",loginDao.getDetails(loginBean));
+		if(loginDao.validate(loginBean)) {			 
+			context.setAttribute("isAdmin",true);
+			context.setAttribute("adminDetails", loginBean);
 			response.sendRedirect("user-list.jsp");
 			
-		}else {
-			
+		}else {			 
+			context.setAttribute("isAdmin",false);
+			context.setAttribute("adminDetails", null);
+			out.println("<meta http-equiv='refresh' content='5';URL='login.jsp'>");//redirects after 3 seconds
+			out.println("<h1 style='color:red; text-align:center; font-size:4rem;'>Either the name, email or password is wrong. Please login again!!!</h1>");			
 			response.sendRedirect("login.jsp");
 			
 		}
