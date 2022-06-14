@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ page import="java.util.List,com.admin.topic.bean.TopicBean"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <!DOCTYPE html>
 <html>
@@ -28,7 +28,7 @@ body {
 	font-weight: 400;
 	line-height: 1.5;
 	min-height: 100vh;
-	background-color: #FDF6EC;
+	background-color: #EEEEEE;
 }
 
 .list-page-header {
@@ -98,21 +98,6 @@ body {
 	border-color: #A760FF;
 }
 
-.list-add-new-btn:link, .list-add-new-btn:visited {
-	text-decoration: none;
-	border-radius: 0.75rem;
-	font-size: 2rem;
-	margin-left: 5rem;
-	padding: 0.5rem 1rem;
-	background-color: #95CD41;
-	color: #CDF0EA;
-	transition: all 0.2s;
-}
-
-.list-add-new-btn {
-	transform: scale(1.1) translateY(-3px);
-}
-
 .list-table {
 	text-align: left;
 	width: 80%;
@@ -120,6 +105,7 @@ body {
 	margin-left: 10%;
 	margin-right: 10%;
 	text-align: center;
+	margin-bottom: 7.5rem;
 }
 
 .list-table-thead {
@@ -180,19 +166,198 @@ body {
 	background-color: #FF5D5D;
 	transform: scaleX(1.1);
 }
-.list-welcome{
-margin-top: 10rem;
-height: 10rem;
+
+.list-welcome {
+	margin-top: 10rem;
+	height: 10rem;
 }
 
-.list-welcome-h3{
-font-size: 3rem;
+.list-welcome-h3 {
+	margin-top: 10rem;
+	margin-left: 10rem;
+	font-size: 3.5rem;
 }
 
-.list-welcome-p{
-font-size: 2rem;
+.list-welcome-p {
+	margin-left: 10rem;
+	font-size: 2rem;
 }
 
+.list-subjects {
+	height: 10vh;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.list-subjects-top-header {
+	font-size: 3rem;
+	margin-left: 5rem;
+	margin-bottom: 1rem;
+}
+
+.list-subjects-form {
+	display: flex;
+	align-item: center;
+	font-size: 1.5rem;
+}
+
+.list-subjects-form-label {
+	transform: translateY(2px);
+	transition: all 0.2s;
+	margin-right: 0.5rem;
+}
+
+.list-subjects-form-label:hover {
+	color: #4D77FF;
+	transform: scale(1.05) translateY(0);
+}
+
+.list-subjects-form-input {
+	height: 2.5rem;
+	width: 20rem;
+	border: none;
+	border-bottom: 2px green solid;
+}
+
+.list-subjects-form-submit {
+	background-color: #47B5FF;
+	color: #000000;
+	transition: all 0.2s;
+	padding: 0.2rem 0.5rem;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border: none;
+}
+
+.list-subjects-form-submit:hover {
+	background-color: #1363DF;
+	color: #DFF6FF;
+}
+
+.sub-btn-subject {
+	font-size: 2.25rem;
+	margin-left: 2.5rem;
+	margin-bottom: 1rem;
+	transition: all 0.2s;
+}
+
+.sub-btn-subject:hover {
+	transform: translateY(-2px) scale(1.1);
+	color: #4D96FF;
+}
+
+.sub-btn-add-btn:link, .sub-btn-add-btn:visited {
+	font-size: 1.5rem;
+	background-color: #4D77FF;
+	color: #EEEEEE;
+	text-decoration: none;
+	transition: all 0.2s;
+	padding: 0.3rem 0.6rem;
+	border-radius: 0.5rem;
+}
+
+.sub-btn-add-btn:hover {
+	transform: scale(1.1);
+	background-color: #0E3EDA;
+	color: #EFEFEF;
+}
+
+.sub-btn {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-right: 10rem;
+}
+
+.list-subjects-question {
+	font-size: 1.5rem;
+	margin-left: 2.5rem;
+}
+
+.question {
+	font-size: 1.75rem;
+	margin-right: 0.25rem;
+}
+
+.list-subjects-p {
+	font-size: 1.25rem;
+	margin-left: 2.5rem;
+}
+
+.action {
+	display: flex;
+	margin-left: 2.5rem;
+	margin-bottom: 1rem;
+}
+
+.action-update:link, .action-update:visited {
+	font-size: 1.2rem;
+	color: #FBF8F1;
+	width: 4rem;
+	text-align: center;
+	text-decoration: none;
+	background-color: #0AA1DD;
+	padding-bottom: 0.1rem;
+	padding-top: 0.1rem;
+	border-radius: 0.5rem;
+	transition: all 0.2s;
+}
+
+.action-update:hover {
+	background-color: #2155CD;
+	transform: scaleX(1.05) translateY(-1px);
+}
+
+.action-delete:link, .action-delete:visited {
+	font-size: 1.2rem;
+	color: #FBF8F1;
+	transition: all 0.2s;
+	width: 4rem;
+	text-align: center;
+	padding-bottom: 0.1rem;
+	padding-top: 0.1rem;
+	background-color: #FF2442;
+	text-decoration: none;
+	border-radius: 0.5rem;
+	margin-left: 1rem;
+}
+
+.action-delete:hover {
+	background-color: #CE1212;
+	transform: scaleX(1.05) translateY(-1px);
+}
+
+.list-add-new-user-btn:link, .list-add-new-user-btn:visited {
+	text-decoration: none;
+	font-size: 1.5rem;
+	color: E8F9FD;
+	background-color: #79DAE8;
+	margin: 5rem;
+	border-radius: 0.5rem;
+	padding: 0.25rem 0.5rem;
+	transition: all 0.25s;
+}
+
+.list-add-new-user-btn:hover {
+	color: #E8F9FD;
+	background-color: #242F9B;
+}
+
+.not-found-h3 {
+	margin-left: 2.5rem;
+	font-size: 1.5rem;
+}
+
+.not-found-p {
+	margin-left: 2.5rem;
+	margin-bottom: 2rem;
+	font-size: 1.25rem;
+}
+.subject-bar{
+display: flex;
+align-items: center;
+}
 </style>
 
 </head>
@@ -205,54 +370,149 @@ font-size: 2rem;
 
 		<div class="list-page-nav">
 			<h3 class="list-page-nav-h3">Users Management Application</h3>
-			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Users
-				Lists</a>
+			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Control
+				Panel</a>
 		</div>
 	</header>
-
-	<div class="list">
-		<c:if test="${listUser == null}">
-			<div class="list-welcome">
-				<h3 class="list-welcome-h3">Welcome to User Management Application</h3>
-				<p class="list-welcome-p">To view the users list, Press the User Lists button</p>
-			</div>
-		</c:if>
-		<c:if test="${listUser != null}">
+	<c:if test="${reloaded == null || reloaded == false }">
+		<h3 class="list-welcome-h3">Welcome to Online Examination Portal</h3>
+		<p class="list-welcome-p">To proceed click on the Control panel
+			button</p>
+	</c:if>
+	<c:if test="${reloaded == true }">
+		<div class="list">
 			<h3 class="list-heading">List Of Users</h3>
 			<hr class="list-hr">
-			<a href="<%=request.getContextPath()%>/new" class="list-add-new-btn">Add
-				New Users</a>
-			<br />
-			<table class="list-table">
-				<thead class="list-table-thead">
-					<tr>
-						<th class="list-table-thead-th">ID</th>
-						<th class="list-table-thead-th">Name</th>
-						<th class="list-table-thead-th">Email</th>
-						<th class="list-table-thead-th">Country</th>
-						<th class="list-table-thead-th">Operations</th>
-					</tr>
-				</thead>
-				<tbody class="list-table-tbody">
-					<c:forEach var="user" items="${listUser}">
+			<a href="<%=request.getContextPath()%>/new"
+				class="list-add-new-user-btn">+ Add New User</a> <br />
+			<c:if test="${listUser == null}">
+				<div class="list-welcome">
+					<p class="list-welcome-p">No users yet. Try adding new user,
+						press the Add New User button.</p>
+				</div>
+			</c:if>
+			<c:if test="${listUser != null}">
+				<table class="list-table">
+					<thead class="list-table-thead">
 						<tr>
-							<td><c:out value="${user.id}" /></td>
-							<td><c:out value="${user.name}" /></td>
-							<td><c:out value="${user.email}" /></td>
-							<td><c:out value="${user.country}" /></td>
-							<td>
-								<div class="operations">
-									<a href='edit?id=<c:out value="${user.id}" />'
-										class="operations-btn-update">Edit</a> <a
-										href='delete?id=<c:out value="${user.id}" />'
-										class="operations-btn-delete">Delete</a>
-								</div>
-							</td>
+							<th class="list-table-thead-th">ID</th>
+							<th class="list-table-thead-th">Name</th>
+							<th class="list-table-thead-th">Email</th>
+							<th class="list-table-thead-th">Country</th>
+							<th class="list-table-thead-th">Operations</th>
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-		</c:if>
-	</div>
+					</thead>
+					<tbody class="list-table-tbody">
+						<c:forEach var="user" items="${listUser}">
+							<tr>
+								<td><c:out value="${user.id}" /></td>
+								<td><c:out value="${user.name}" /></td>
+								<td><c:out value="${user.email}" /></td>
+								<td><c:out value="${user.country}" /></td>
+								<td>
+									<div class="operations">
+										<a href='edit?id=<c:out value="${user.id}" />'
+											class="operations-btn-update">Edit</a> <a
+											href='delete?id=<c:out value="${user.id}" />'
+											class="operations-btn-delete">Delete</a>
+									</div>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</c:if>
+
+			<hr class="list-hr">
+			<div class="list-subjects">
+				<h3 class="list-subjects-top-header">Subject-Wise Questions</h3>
+				<form action="insertSubject" class="list-subjects-form"
+					method="post">
+					<label class="list-subjects-form-label">Add New Subject: </label><input
+						class="list-subjects-form-input" name="subjectName" type="text" />
+					<input class="list-subjects-form-submit" type="submit"
+						value="+ Add" />
+				</form>
+			</div>
+			<hr class="list-hr">
+			<c:if test="${subjects == null}">
+				<p class="list-welcome-p">No subjects yet. Try adding a new
+					subject, press the Add New Subject button.</p>
+			</c:if>
+			<c:if test="${subjects != null}">
+				<c:forEach var="subject" items="${subjects}">
+					<%
+					session.setAttribute("present", false);
+					%>
+					<div class="sub-btn">
+						<div class="subject-bar">
+							<h2 class="sub-btn-subject">
+								<c:out value="${subject.subjectName}" />
+							</h2>
+							<div class="action">
+								<a
+									href='updateSubject?subjectId=<c:out value="${subject.subjectId}" />&subjectName=<c:out value="${subject.subjectName}" />'
+									class="action-update">Update</a> <a
+									href='deleteSubject?subjectId=<c:out value="${subject.subjectId}" />&subjectName=<c:out value="${subject.subjectName}" />'
+									class="action-delete">Delete</a>
+							</div>
+						</div>
+						<a
+							href="<%=request.getContextPath()%>/newQuestion?subject=<c:out value="${subject.subjectName}" />"
+							class="sub-btn-add-btn">+ Add New Question</a>
+					</div>
+					<c:if test="${questionsList !=null}">
+						<c:forEach var="question" items="${questionsList }">
+							<c:if test="${question.topicName == subject.subjectName}">
+								<%
+								session.setAttribute("present", true);
+								%>
+								<div class="list-question-answer-block">
+									<h2 class="list-subjects-question">
+										<span class="question">Question:</span>
+										<c:out value="${question.question}" />
+									</h2>
+									<p class="list-subjects-p">
+										Option(A):
+										<c:out value="${question.choice1}" />
+									</p>
+									<p class="list-subjects-p">
+										Option(B):
+										<c:out value="${question.choice2}" />
+									</p>
+									<p class="list-subjects-p">
+										Option(C):
+										<c:out value="${question.choice3}" />
+									</p>
+									<p class="list-subjects-p">
+										Option(D):
+										<c:out value="${question.choice4}" />
+									</p>
+									<p class="list-subjects-p">
+										Answer:
+										<c:out value="${question.answer}" />
+									</p>
+									<div class="action">
+										<a
+											href='editQuestion?questionId=<c:out value="${question.questionId}" />'
+											class="action-update">Edit</a> <a
+											href='deleteQuestion?questionId=<c:out value="${question.questionId}" />'
+											class="action-delete">Delete</a>
+									</div>
+								</div>
+							</c:if>
+						</c:forEach>
+						<c:if test="${present == false}">
+							<h3 class="not-found-h3">No questions for this subject are
+								present!!</h3>
+							<p class="not-found-p">Click the add new button to add a new
+								question.</p>
+						</c:if>
+					</c:if>
+					<hr class="list-hr">
+				</c:forEach>
+			</c:if>
+		</div>
+	</c:if>
 </body>
 </html>

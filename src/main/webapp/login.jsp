@@ -119,7 +119,7 @@ body {
 
 .login-section-group-form-input:focus {
 	outline: none;
-	transform: scale(1.2);
+	transform: scale(1.1);
 	border-bottom: 3px solid #1F4690;
 }
 
@@ -151,6 +151,7 @@ body {
 </style>
 </head>
 <body>
+<% session.setAttribute("reloaded", false); %>
 	<div class="login-page-main">
 		<h1 class="login-page-main-heading">Online Examination Portal
 			Login Page</h1>

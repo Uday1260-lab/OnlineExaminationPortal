@@ -137,7 +137,7 @@ transition: all 0.2s;
 .card-form-input:focus{
 outline: none;
 border-bottom: 3px #43919B solid;
-transform: scale(1.2);
+transform: scale(1.1);
 }
 .card-form-input:hover{
 transform: scale(1.1);
@@ -168,8 +168,7 @@ color: #F0ECE3;
 
 		<div class="list-page-nav">
 			<h3 class="list-page-nav-h3">Users Management Application</h3>
-			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Users
-				Lists</a>
+			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Control Panel</a>
 		</div>
 	</header>
 
@@ -191,25 +190,25 @@ color: #F0ECE3;
 			</h2>
 
 		<c:if test="${user != null}">
-			<input type="hidden" name="id" value="<c:out value='${user.id}' />" class="card-form-input" />
+			<input type="hidden" name="id" value="<c:out value='${user.id}' />" class="card-form-input" required="required"/>
 		</c:if>
 
 		<div class="form-group">
 			<label class="card-form-label">User Name: </label> <input type="text"
-				value="<c:out value='${user.name}' />"
+				value="<c:out value='${user.name}'/>"
 				name="name" required="required" class="card-form-input">
 		</div>
 
 		<div class="form-group">
 			<label class="card-form-label">User Email: </label> <input type="text"
-				value="<c:out value='${user.email}' />" class="card-form-input"
-				name="email">
+				value="<c:out value='${user.email}'/>" class="card-form-input"
+				name="email" required="required">
 		</div>
 
 		<div class="form-group">
 			<label class="card-form-label">User Country: </label> <input type="text"
-				value="<c:out value='${user.country}' />" class="card-form-input"
-				name="country">
+				value="<c:out value='${user.country}'/>" class="card-form-input"
+				name="country" required="required">
 		</div>
 		<div class="form-group">
 		<button type="submit" class="card-form-submit-btn">Save</button>

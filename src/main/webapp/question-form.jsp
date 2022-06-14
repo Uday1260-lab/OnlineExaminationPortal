@@ -87,7 +87,7 @@ line-height: 2;
 }
 
 .card-form{
-min-width: 30vw;
+min-width: 60vw;
 border-radius: 2rem;
 padding: 2.5rem;
 background-image: linear-gradient( to right bottom, #EEEEEE, #DDDDDD);
@@ -127,7 +127,7 @@ color: #0093AB;
 
 .card-form-input{
 padding: 0.4rem 0.8rem;
-width: 12.5vw;
+width: 40vw;
 font-size: 1.3rem;
 border-radius: 5px;
 border: none;
@@ -137,7 +137,7 @@ transition: all 0.2s;
 .card-form-input:focus{
 outline: none;
 border-bottom: 3px #43919B solid;
-transform: scale(1.2);
+transform: scale(1.1);
 }
 .card-form-input:hover{
 transform: scale(1.1);
@@ -167,49 +167,61 @@ color: #F0ECE3;
 		</div>
 
 		<div class="list-page-nav">
-			<h3 class="list-page-nav-h3">Users Management Application</h3>
-			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Users
-				Lists</a>
+			<h3 class="list-page-nav-h3">Questions Management Application</h3>
+			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Controls Panel</a>
 		</div>
 	</header>
 
 
 	<div class="card">
-		<c:if test="${user != null}">
-			<form action="update" method="post" class="card-form">
+		<c:if test="${questions != null}">
+			<form action="updateQuestion" method="post" class="card-form">
 		</c:if>
-		<c:if test="${user == null}">
-			<form action="insert" method="post" class="card-form">
+		<c:if test="${questions == null}">
+			<form action="insertQuestion" method="post" class="card-form">
 		</c:if>
 			<h2 class="card-form-caption-h2">
-				<c:if test="${user != null}">
-            			Edit User Form
+				<c:if test="${questions != null}">
+            			Edit Question Form
             		</c:if>
-				<c:if test="${user == null}">
-            			Add New User Form
+				<c:if test="${questions == null}">
+            			Add New Question Form
             		</c:if>
 			</h2>
 
-		<c:if test="${user != null}">
-			<input type="hidden" name="id" value="<c:out value='${user.id}' />" class="card-form-input" />
+		<c:if test="${questions != null}">
+			<input type="hidden" name="questionId" value="<c:out value='${questions.questionId}' />" class="card-form-input" />
 		</c:if>
-
+		<c:if test="${questions == null}">
+        	<div class="form-group">
+				<label class="card-form-label">Topic Name: <c:out value="${subject}" /></label><input type="hidden" value="<c:out value="${subject}" />" name="topicName" required="required" />				
+			</div>
+        </c:if>
+        <c:if test="${questions != null}">
+        	<div class="form-group">
+				<label class="card-form-label">Topic Name: </label><input type="text" value="<c:out value="${questions.topicName}" />" name="topicName" required="required" class="card-form-input" />
+			</div>
+        </c:if>
+		
 		<div class="form-group">
-			<label class="card-form-label">User Name: </label> <input type="text"
-				value="<c:out value='${user.name}' />"
-				name="name" required="required" class="card-form-input">
+			<label class="card-form-label">Question: </label> <input type="text" value="<c:out value="${questions.question}" />" name="question" class="card-form-input" required="required" />
 		</div>
 
 		<div class="form-group">
-			<label class="card-form-label">User Email: </label> <input type="text"
-				value="<c:out value='${user.email}' />" class="card-form-input"
-				name="email">
+			<label class="card-form-label">Option 1: </label> <input type="text" value="<c:out value="${questions.choice1}" />" class="card-form-input" name="choiceA" required="required" />
+		</div>
+		<div class="form-group">
+			<label class="card-form-label">Option 2: </label> <input type="text" value="<c:out value="${questions.choice2}" />" class="card-form-input" name="choiceB" required="required" />
+		</div>
+		<div class="form-group">
+			<label class="card-form-label">Option 3: </label> <input type="text" value="<c:out value="${questions.choice3}" />" class="card-form-input" name="choiceC" required="required" />
+		</div>
+		<div class="form-group">
+			<label class="card-form-label">Option 4: </label> <input type="text" value="<c:out value="${questions.choice4}" />" class="card-form-input" name="choiceD" required="required" />
 		</div>
 
 		<div class="form-group">
-			<label class="card-form-label">User Country: </label> <input type="text"
-				value="<c:out value='${user.country}' />" class="card-form-input"
-				name="country">
+			<label class="card-form-label">Answer: </label> <input type="text" value="<c:out value="${questions.answer}"/>" class="card-form-input" name="answer" required="required" />
 		</div>
 		<div class="form-group">
 		<button type="submit" class="card-form-submit-btn">Save</button>

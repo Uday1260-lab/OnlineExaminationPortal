@@ -13,8 +13,13 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import com.admin.login.bean.LoginBean;
+import com.admin.subject.bean.SubjectBean;
+import com.admin.subject.database.SubjectDao;
+import com.admin.topic.bean.TopicBean;
+import com.admin.topic.database.TopicDao;
 import com.admin.usermanagement.bean.User;
 import com.admin.usermanagement.dao.UserDao;
+import com.mysql.cj.Session;
 
 /**
  * Servlet implementation class UserServlet
@@ -25,6 +30,8 @@ import com.admin.usermanagement.dao.UserDao;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDao userDao;
+	private TopicDao topicDao;
+	private SubjectDao subjectDao;
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -32,6 +39,8 @@ public class UserServlet extends HttpServlet {
 	public void init() throws ServletException {
 
 		userDao = new UserDao();
+		topicDao = new TopicDao();
+		subjectDao = new SubjectDao();
 
 	}
 
@@ -83,7 +92,31 @@ public class UserServlet extends HttpServlet {
 				case "/update":
 					updateUser(request, response);
 					break;
+				case "/newQuestion":
+					showNewQuestionForm(request, response);
+					break;
+				case "/insertQuestion":
+					insertNewQuestion(request, response);
+					break;
+				case "/deleteQuestion":
+					deleteQuestion(request, response);
+					break;
+				case "/insertSubject":
+					insertNewSubject(request, response);
+					break;
+				case "/deleteSubject":
+					deleteSubject(request, response);
+					break;
+				case "/editQuestion":
+					showEditQuestionForm(request, response);
+					break;
+				case "/updateQuestion":
+					updateQuestion(request, response);
+					break;
 				default:
+					request.setAttribute("reloaded", true);
+					listSubjects(request, response);
+					listQuestions(request, response);
 					listUser(request, response);
 					break;
 				}
@@ -92,13 +125,113 @@ public class UserServlet extends HttpServlet {
 			}
 		} else if (loginBean == null) {
 			out.println("<meta http-equiv='refresh' content='5;URL=login.jsp'>");//redirects after 3 seconds
-			out.println("<h1 style='color:red; text-align:center; font-size:4rem;'>No Admin Found. Please Login!!!</h1>");
+			out.println("<h1 style='color:red; top-margin: 10rem; text-align:center; font-size:4rem;'>No Admin Found. Please Login!!!</h1>");
 //			out.println("<script type=\"text/javascript\">");
 //			out.println("alert('Please Login!!!');");
 //			out.println("location='login.jsp';");
 //			out.println("</script>");
 //			response.sendRedirect("login.jsp");
 		}
+	}
+	
+	
+	private void listQuestions(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		
+		List<TopicBean> topicBeans = topicDao.selectAllQuestions();
+		request.setAttribute("questionsList", topicBeans);
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
+//		dispatcher.forward(request, response);
+	
+	}
+	
+	private void listSubjects(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		
+		List<SubjectBean> subjectBeans = subjectDao.selectAllSubjects();
+		request.setAttribute("subjects", subjectBeans);
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
+//		dispatcher.forward(request, response);
+	
+	}
+
+	private void showNewQuestionForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String subject = request.getParameter("subject");
+		request.setAttribute("subject", subject);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("question-form.jsp");
+		dispatcher.forward(request, response);
+	
+	}
+
+	private void showEditQuestionForm(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, ServletException, IOException {
+		
+		int questionId = Integer.parseInt(request.getParameter("questionId"));
+		System.out.println("Question Id: " + questionId);
+		TopicBean existingQuestion = topicDao.selectQuestionById(questionId);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("question-form.jsp");
+		request.setAttribute("questions", existingQuestion);
+		dispatcher.forward(request, response);
+
+	}
+
+	private void insertNewQuestion(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		
+		String topicName = request.getParameter("topicName");
+		String question = request.getParameter("question");
+		String choiceA = request.getParameter("choiceA");
+		String choiceB = request.getParameter("choiceB");
+		String choiceC = request.getParameter("choiceC");
+		String choiceD = request.getParameter("choiceD");
+		String answer = request.getParameter("answer");
+		TopicBean newTopicBean = new TopicBean(topicName, question, choiceA, choiceB, choiceC, choiceD, answer);
+		topicDao.insertQuestion(newTopicBean);
+		response.sendRedirect("list");
+	
+	}
+	
+	private void insertNewSubject(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		
+		String subjectName = request.getParameter("subjectName");
+		SubjectBean newSubjectBean = new SubjectBean(subjectName);
+		subjectDao.insertSubject(newSubjectBean);
+		response.sendRedirect("list");
+	
+	}
+
+	private void updateQuestion(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		
+		int questionId = Integer.parseInt(request.getParameter("questionId"));		
+		String topicName = request.getParameter("topicName");
+		String question = request.getParameter("question");
+		String choiceA = request.getParameter("choiceA");
+		String choiceB = request.getParameter("choiceB");
+		String choiceC = request.getParameter("choiceC");
+		String choiceD = request.getParameter("choiceD");
+		String answer = request.getParameter("answer");
+		
+		System.out.println( "Topic Name: " + topicName + " question: " + question + " choice A: " + choiceA + " choice B: " + choiceB + " choice C: " + choiceC+ " choice D: " + choiceD + " answer: " + answer );
+		
+		TopicBean updatedTopicBean = new TopicBean(topicName, questionId, question, choiceA, choiceB, choiceC, choiceD, answer);
+		System.out.println( "Topic Name: " + updatedTopicBean.getTopicName() + " question: " + updatedTopicBean.getQuestion() + " choice A: " + updatedTopicBean.getChoice1() + " choice B: " + updatedTopicBean.getChoice2() + " choice C: " + updatedTopicBean.getChoice3()+ " choice D: " + updatedTopicBean.getChoice4() + " answer: " + updatedTopicBean.getAnswer() );
+		topicDao.updateQuestion(updatedTopicBean);
+		response.sendRedirect("list");
+	}
+
+	private void deleteQuestion(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		int questionId = Integer.parseInt(request.getParameter("questionId"));
+		topicDao.deleteQuestion(questionId);
+		response.sendRedirect("list");
+
+	}
+	
+	private void deleteSubject(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+		String subjectName = request.getParameter("subjectName"); 
+		subjectDao.deleteSubject(subjectId,subjectName);
+		response.sendRedirect("list");
+
 	}
 
 	private void listUser(HttpServletRequest request, HttpServletResponse response)

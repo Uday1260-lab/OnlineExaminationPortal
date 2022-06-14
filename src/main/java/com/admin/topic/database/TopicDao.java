@@ -74,13 +74,14 @@ public class TopicDao {
 			// Step 4: Process the ResultSet object.
 			while (rs.next()) {
 				String topicName = rs.getString("topicName");
+				int questionId = rs.getInt("questionId");
 				String question = rs.getString("question");
 				String choiceA = rs.getString("choiceA");
 				String choiceB = rs.getString("choiceB");
 				String choiceC = rs.getString("choiceC");
 				String choiceD = rs.getString("choiceD");
 				String answer = rs.getString("answer");
-				topicBean = new TopicBean(topicName, question, choiceA, choiceB, choiceC, choiceD, answer);
+				topicBean = new TopicBean(topicName, questionId, question, choiceA, choiceB, choiceC, choiceD, answer);
 			}
 		} catch (SQLException e) {
 			printSQLException(e);
@@ -130,10 +131,9 @@ public class TopicDao {
 	}
 
 	public boolean updateQuestion(TopicBean topicBean) throws SQLException {
-		boolean rowUpdated;
+		boolean rowUpdated = false;
 		try (Connection connection = getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_QUESTION_SQL);) {
-			System.out.println("Updated Question:"+statement);
 			statement.setString(1, topicBean.getTopicName());
 			statement.setString(2, topicBean.getQuestion());
 			statement.setString(3, topicBean.getChoice1());
@@ -141,6 +141,8 @@ public class TopicDao {
 			statement.setString(5, topicBean.getChoice3());
 			statement.setString(6, topicBean.getChoice4());
 			statement.setString(7, topicBean.getAnswer());
+			statement.setInt(8, topicBean.getQuestionId());
+			System.out.println("Updated Question: "+statement);
 
 			rowUpdated = statement.executeUpdate() > 0;
 		}
