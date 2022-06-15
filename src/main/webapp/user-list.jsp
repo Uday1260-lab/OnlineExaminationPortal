@@ -375,9 +375,15 @@ align-items: center;
 		</div>
 	</header>
 	<c:if test="${reloaded == null || reloaded == false }">
-		<h3 class="list-welcome-h3">Welcome to Online Examination Portal</h3>
+		<c:if test="${adminDetails != null }" >
+		<h3 class="list-welcome-h3">Hi,<c:out value="${adminDetails.adminName}" /> Welcome to Online Examination Portal</h3>
 		<p class="list-welcome-p">To proceed click on the Control panel
 			button</p>
+		</c:if>
+		<c:if test="${adminDetails == null }" >
+			<h3 class="list-welcome-h3">Sorry, You are not logged-in :( <br/> Please Login!!!</h3>
+			<p class="list-welcome-p">To Login <a href="login.jsp">Click Here!</a></p>			
+		</c:if>
 	</c:if>
 	<c:if test="${reloaded == true }">
 		<div class="list">
@@ -451,7 +457,7 @@ align-items: center;
 							</h2>
 							<div class="action">
 								<a
-									href='updateSubject?subjectId=<c:out value="${subject.subjectId}" />&subjectName=<c:out value="${subject.subjectName}" />'
+									href='updateSubjectForm?subjectId=<c:out value="${subject.subjectId}" />&subjectName=<c:out value="${subject.subjectName}" />'
 									class="action-update">Update</a> <a
 									href='deleteSubject?subjectId=<c:out value="${subject.subjectId}" />&subjectName=<c:out value="${subject.subjectName}" />'
 									class="action-delete">Delete</a>

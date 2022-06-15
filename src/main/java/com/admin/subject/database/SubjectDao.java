@@ -9,7 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.admin.subject.bean.SubjectBean;
+import com.admin.topic.bean.TopicBean;
 import com.admin.topic.database.TopicDao;
+import com.mysql.cj.Session;
+
+import jakarta.security.auth.message.callback.PrivateKeyCallback.Request;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
 
 public class SubjectDao {
 	
@@ -22,10 +28,9 @@ public class SubjectDao {
 	private static final String SELECT_SUBJECT_BY_ID = "select subjectId,subjectName from subjectlist where subjectId =?;";
 	private static final String SELECT_ALL_SUBJECTS = "select * from subjectlist;";
 	private static final String DELETE_SUBJECT_SQL = "delete from subjectlist where subjectId = ?;";
-	private static final String UPDATE_SUBJECT_SQL = "update subjectlist set subjectName=? where id = ?;";
+	private static final String UPDATE_SUBJECT_SQL = "update subjectlist set subjectName=? where subjectId = ?;";
 	
 	public SubjectDao() {
-		
 	}
 	
 	protected Connection getConnection() {
@@ -106,7 +111,13 @@ public class SubjectDao {
 	
 	public boolean deleteSubject(int id, String subjectName) throws SQLException {
 		boolean rowDeleted;
-		List<TopicDao> selectedquestions = new ArrayList<>();
+		List<TopicBean> selectedquestions = new ArrayList<>();
+		TopicDao topicDao = new TopicDao();
+		selectedquestions = topicDao.selectAllQuestionsWithSubjectName(subjectName);
+		for(TopicBean topicBean : selectedquestions){
+			System.out.println("TopicName: " + topicBean.getTopicName() + "Question: " + topicBean.getQuestion() + "Question Id: " + topicBean.getQuestionId() + "ChoiceA: " + topicBean.getChoice1() + "ChoiceB: " + topicBean.getChoice2() + "Choice3: " + topicBean.getChoice3() + "ChoiceD" + topicBean.getChoice4() + "Answer: " + topicBean.getAnswer());
+			topicDao.deleteQuestion(topicBean.getQuestionId());
+		}
 		try (Connection connection = getConnection();
 				PreparedStatement statement = connection.prepareStatement(DELETE_SUBJECT_SQL);) {
 			statement.setInt(1, id);
@@ -115,13 +126,20 @@ public class SubjectDao {
 		return rowDeleted;
 	}
 
-	public boolean updateSubject(SubjectBean subjectBean) throws SQLException {
+	public boolean updateSubject(int id, String subjectName, String prevSubName) throws SQLException {
 		boolean rowUpdated;
+		List<TopicBean> selectedquestions = new ArrayList<>();
+		TopicDao topicDao = new TopicDao();
+		selectedquestions = topicDao.selectAllQuestionsWithSubjectName(prevSubName);
+		for(TopicBean topicBean : selectedquestions){
+			System.out.println("TopicName: " + topicBean.getTopicName() + "Question: " + topicBean.getQuestion() + "Question Id: " + topicBean.getQuestionId() + "ChoiceA: " + topicBean.getChoice1() + "ChoiceB: " + topicBean.getChoice2() + "Choice3: " + topicBean.getChoice3() + "ChoiceD" + topicBean.getChoice4() + "Answer: " + topicBean.getAnswer());
+			topicDao.updateQuestionTopicName(topicBean.getQuestionId(), subjectName);
+		}
 		try (Connection connection = getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_SUBJECT_SQL);) {
 			System.out.println("updated Subject: "+statement);
-			statement.setString(1, subjectBean.getSubjectName());
-			statement.setInt(2, subjectBean.getSubjectId());
+			statement.setString(1, subjectName);
+			statement.setInt(2, id);
 
 			rowUpdated = statement.executeUpdate() > 0;
 		}
@@ -143,7 +161,4 @@ public class SubjectDao {
 			}
 		}
 	}
-
-	
-
 }

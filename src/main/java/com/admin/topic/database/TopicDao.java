@@ -17,9 +17,11 @@ public class TopicDao {
 	private String jdbcDriver = "com.mysql.cj.jdbc.Driver";
 
 	private static final String INSERT_QUESTION_SQL = "insert into topicdata (topicName, question, choiceA, choiceB, choiceC, choiceD, answer) values (?, ?, ?, ?, ?, ?, ?);";
-	private static final String SELECT_QUESTION_BY_ID = "select topicName,questionId,question,choiceA,choiceB,choiceC,choiceD,answer  from topicdata where questionId =?;";
+	private static final String SELECT_QUESTION_BY_ID = "select topicName,questionId,question,choiceA,choiceB,choiceC,choiceD,answer  from topicdata where questionId =?;";	
 	private static final String SELECT_ALL_QUESTIONS = "select * from topicdata ;";
+	private static final String SELECT_ALL_QUESTIONS_WITH_SUBJECTNAME = "select * from topicdata where topicName=? ;";
 	private static final String DELETE_QUESTION_SQL = "delete from topicdata where questionId = ?;";
+	private static final String UPDATE_QUESTION_TOPIC_NAME = "update topicdata set topicName = ? where questionId = ?;"; 
 	private static final String UPDATE_QUESTION_SQL = "update topicdata set topicName = ?, question = ?, choiceA = ?, choiceB = ?, choiceC = ?, choiceD = ?, answer = ? where questionId = ?;";
 
 	public TopicDao() {
@@ -119,6 +121,38 @@ public class TopicDao {
 		}
 		return topicBeans;
 	}
+	
+	public List<TopicBean> selectAllQuestionsWithSubjectName(String subject) {
+
+		// using try-with-resources to avoid closing resources (boiler plate code)
+		List<TopicBean> topicBeans = new ArrayList<>();
+		// Step 1: Establishing a Connection
+		try (Connection connection = getConnection();
+
+				// Step 2:Create a statement using connection object
+			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_QUESTIONS_WITH_SUBJECTNAME);) {
+			preparedStatement.setString(1, subject);
+			System.out.println(preparedStatement);
+			// Step 3: Execute the query or update query
+			ResultSet rs = preparedStatement.executeQuery();
+
+			// Step 4: Process the ResultSet object.
+			while (rs.next()) {
+				int questionId = rs.getInt("questionId");
+				String topicName = rs.getString("topicName");
+				String question = rs.getString("question");
+				String choiceA = rs.getString("choiceA");
+				String choiceB = rs.getString("choiceB");
+				String choiceC = rs.getString("choiceC");
+				String choiceD = rs.getString("choiceB");
+				String answer = rs.getString("answer");
+				topicBeans.add(new TopicBean(topicName, questionId, question, choiceA, choiceB, choiceC, choiceD, answer));
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+		return topicBeans;
+	}
 
 	public boolean deleteQuestion(int id) throws SQLException {
 		boolean rowDeleted;
@@ -163,6 +197,20 @@ public class TopicDao {
 				}
 			}
 		}
+	}
+
+	public boolean updateQuestionTopicName(int questionId, String subjectName) {
+		boolean rowUpdated = false;
+		try (Connection connection = getConnection();
+				PreparedStatement statement = connection.prepareStatement(UPDATE_QUESTION_TOPIC_NAME);) {
+			statement.setString(1, subjectName);
+			statement.setInt(2, questionId);
+			System.out.println("Updated Topic Name: "+statement);
+			rowUpdated = statement.executeUpdate() > 0;
+		}catch (SQLException e) {
+			printSQLException(e);
+		}
+		return rowUpdated;
 	}
 
 

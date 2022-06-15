@@ -104,6 +104,12 @@ public class UserServlet extends HttpServlet {
 				case "/insertSubject":
 					insertNewSubject(request, response);
 					break;
+				case "/updateSubjectForm":
+					showUpdateSubjectForm(request, response);
+					break;
+				case "/updateSubject":
+					updateSubject(request, response);
+					break;
 				case "/deleteSubject":
 					deleteSubject(request, response);
 					break;
@@ -162,6 +168,18 @@ public class UserServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("question-form.jsp");
 		dispatcher.forward(request, response);
 	
+	}
+
+	private void showUpdateSubjectForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+		String subjectName = request.getParameter("subjectName");
+		System.out.println("showUpdateSubjectForm Subject Id: " + subjectId + " Subject Name: " + subjectName);
+		ServletContext context=getServletContext();
+		context.setAttribute("subId", subjectId);
+		context.setAttribute("subName", subjectName);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("SubjectUpdateForm.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	private void showEditQuestionForm(HttpServletRequest request, HttpServletResponse response)
@@ -230,6 +248,16 @@ public class UserServlet extends HttpServlet {
 		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
 		String subjectName = request.getParameter("subjectName"); 
 		subjectDao.deleteSubject(subjectId,subjectName);
+		response.sendRedirect("list");
+
+	}
+	
+	private void updateSubject(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+		String subjectName = request.getParameter("subjectName");
+		String prevSubjectName = request.getParameter("prevSubName");
+		System.out.println("updateSubject " + prevSubjectName);
+		subjectDao.updateSubject(subjectId,subjectName,prevSubjectName);
 		response.sendRedirect("list");
 
 	}
