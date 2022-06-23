@@ -30,4 +30,24 @@
     <servlet-name>TopicServlet</servlet-name>
     <servlet-class>com.admin.topic.web.TopicServlet</servlet-class>
   </servlet>
+  <servlet>
+    <description></description>
+    <display-name>UserLogin</display-name>
+    <servlet-name>UserLogin</servlet-name>
+    <servlet-class>com.admin.usermanagement.web.UserLogin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserLogin</servlet-name>
+    <url-pattern>/UserLogin</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ExaminationServlet</display-name>
+    <servlet-name>ExaminationServlet</servlet-name>
+    <servlet-class>com.admin.usermanagement.web.ExaminationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExaminationServlet</servlet-name>
+    <url-pattern>/ExaminationServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -173,7 +173,7 @@ body {
 }
 
 .list-welcome-h3 {
-	margin-top: 10rem;
+	margin-top: 5rem;
 	margin-left: 10rem;
 	font-size: 3.5rem;
 }
@@ -181,6 +181,13 @@ body {
 .list-welcome-p {
 	margin-left: 10rem;
 	font-size: 2rem;
+}
+
+.list-welcome-p2 {
+margin-top:1rem;
+	margin-left: 10rem;
+	font-size: 1.5rem;
+	width: 75rem;
 }
 
 .list-subjects {
@@ -354,9 +361,18 @@ body {
 	margin-bottom: 2rem;
 	font-size: 1.25rem;
 }
-.subject-bar{
-display: flex;
-align-items: center;
+
+.subject-bar {
+	display: flex;
+	align-items: center;
+}
+.user-credentials{
+padding-left: 2.5rem;
+padding-top: 0.5rem;
+padding-bottom: 0.5rem;
+font-size: 1.25rem;
+color: #C6DCE4;
+background-image: linear-gradient( to right, #1363DF, #47B5FF);
 }
 </style>
 
@@ -373,16 +389,47 @@ align-items: center;
 			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Control
 				Panel</a>
 		</div>
+		<div class="user-credentials">
+				<p>
+					Admin Name:
+					<c:out value="${adminDetails.adminName}" />
+				</p>
+				<p>
+					Admin Email:
+					<c:out value="${adminDetails.adminEmail}" />
+				</p>
+				<p id="time">Time: </p>
+				<p id="date">Date: </p>
+			</div>
 	</header>
 	<c:if test="${reloaded == null || reloaded == false }">
-		<c:if test="${adminDetails != null }" >
-		<h3 class="list-welcome-h3">Hi,<c:out value="${adminDetails.adminName}" /> Welcome to Online Examination Portal</h3>
-		<p class="list-welcome-p">To proceed click on the Control panel
-			button</p>
+		<c:if test="${adminDetails != null }">
+			<h3 class="list-welcome-h3">
+				Hi,
+				<c:out value="${adminDetails.adminName}" />
+				Welcome to Online Examination Portal
+			</h3>
+			<p class="list-welcome-p">To proceed click on the Control panel
+				button</p>
+			<p class="list-welcome-p2">Online Examination Portal is an online assessment
+				and knowledge management solution used by many corporate,
+				Professional Training Institutes, Universities. The platform is used
+				to conduct assessments, aptitude tests, psychometric tests and
+				personality tests, entrance exams, hiring assessment tests. The
+				platform provides flexibility to define online assessment with
+				various attributes like negative marking, random questions, variable
+				marking, etc. You can conduct an assessment using a computer,
+				mobile, tablet devices. There is a facility to conduct offline
+				assessments which can be synced with the main system after the
+				assessment is completed.</p>
 		</c:if>
-		<c:if test="${adminDetails == null }" >
-			<h3 class="list-welcome-h3">Sorry, You are not logged-in :( <br/> Please Login!!!</h3>
-			<p class="list-welcome-p">To Login <a href="login.jsp">Click Here!</a></p>			
+		<c:if test="${adminDetails == null }">
+			<h3 class="list-welcome-h3">
+				Sorry, You are not logged-in :( <br /> Please Login!!!
+			</h3>
+			<p class="list-welcome-p">
+				To Login <a href="login.jsp">Click Here!</a>
+			</p>
 		</c:if>
 	</c:if>
 	<c:if test="${reloaded == true }">
@@ -404,7 +451,7 @@ align-items: center;
 							<th class="list-table-thead-th">ID</th>
 							<th class="list-table-thead-th">Name</th>
 							<th class="list-table-thead-th">Email</th>
-							<th class="list-table-thead-th">Country</th>
+							<th class="list-table-thead-th">Password</th>
 							<th class="list-table-thead-th">Operations</th>
 						</tr>
 					</thead>
@@ -414,7 +461,7 @@ align-items: center;
 								<td><c:out value="${user.id}" /></td>
 								<td><c:out value="${user.name}" /></td>
 								<td><c:out value="${user.email}" /></td>
-								<td><c:out value="${user.country}" /></td>
+								<td><c:out value="${user.userPassword}" /></td>
 								<td>
 									<div class="operations">
 										<a href='edit?id=<c:out value="${user.id}" />'
@@ -520,5 +567,49 @@ align-items: center;
 			</c:if>
 		</div>
 	</c:if>
+	<script type="text/javascript">
+setInterval(displayTimeAndDate, 100);
+function displayTimeAndDate() {
+	var time= new Date();
+	var hrs = time.getHours();
+	var min = time.getMinutes();
+	var sec = time.getSeconds();
+	var year = time.getFullYear();
+	var month = time.getMonth();
+	var date = time.getDate();
+	var day = "GoodDay";
+	switch (time.getDay()) {
+	case 0:
+		day = "Sunday";
+		break;
+	case 1:
+		day = "Monday";
+		break;
+	case 2:
+		day = "Tuesday";
+		break;
+	case 3:
+		day = "Wednesday";
+		break;
+	case 4:
+		day = "Thursday";
+		break;
+	case 5:
+		day = "Friday";
+		break;
+	case 6:
+		day = "Saturday";
+		break;
+
+	default:
+		day = "GoodDay";
+		break;
+	}
+	
+	document.getElementById("time").innerHTML = "Time: " + hrs + ":" + min + ":" + sec;
+	document.getElementById("date").innerHTML = "Date: " + day + ", " + date + "/" + month + "/" + year;
+}
+</script>
+	
 </body>
 </html>

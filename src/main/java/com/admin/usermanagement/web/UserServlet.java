@@ -8,9 +8,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import com.admin.login.bean.LoginBean;
 import com.admin.subject.bean.SubjectBean;
@@ -71,10 +78,19 @@ public class UserServlet extends HttpServlet {
 		} else {
 			isLoggedIn = (Boolean) context.getAttribute("isAdmin");
 		}
+		Boolean isUserLoggedIn = false;
+		if (context.getAttribute("isUser") == null) {
+			isUserLoggedIn = false;
+		} else {
+			isUserLoggedIn = (Boolean) context.getAttribute("isUser");
+		}
 		LoginBean loginBean = (LoginBean) context.getAttribute("adminDetails");
-		System.out.println(loginBean);
-		System.out.println(isLoggedIn);
-		if (loginBean != null) {
+		User user = (User) context.getAttribute("userDetails");
+		System.out.println("loginBean= " + loginBean);
+		System.out.println("isLoggedIn= " + isLoggedIn);
+		System.out.println("user= " + user);
+		System.out.println("isUserLoggedIn= " + isUserLoggedIn);
+		if (loginBean != null ) {
 			try {
 				switch (action) {
 				case "/new":
@@ -129,7 +145,32 @@ public class UserServlet extends HttpServlet {
 			} catch (SQLException ex) {
 				throw new ServletException(ex);
 			}
-		} else if (loginBean == null) {
+		} else if (user != null) {
+			try {
+				switch (action) {
+				case "/subjectList":
+					listSubjects(request, response);
+					showChooseTopicForm(request, response);
+					break;
+				case "/examServer1":
+					showExamPage1(request, response);
+					break;
+				case "/saveResult":
+					saveExamAnswers(request, response);
+					break;
+				default:
+					listSubjects(request, response);
+					listQuestions(request, response);
+					break;
+					
+				}
+				
+			} catch (SQLException ex) {
+				throw new ServletException(ex);
+			}
+		} 
+		
+		else if (loginBean == null && user == null) {
 			out.println("<meta http-equiv='refresh' content='5;URL=login.jsp'>");//redirects after 3 seconds
 			out.println("<h1 style='color:red; top-margin: 10rem; text-align:center; font-size:4rem;'>No Admin Found. Please Login!!!</h1>");
 //			out.println("<script type=\"text/javascript\">");
@@ -139,7 +180,259 @@ public class UserServlet extends HttpServlet {
 //			response.sendRedirect("login.jsp");
 		}
 	}
+
+	private void saveExamAnswers(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
+		int index = Integer.parseInt(request.getParameter("index"));
+		System.out.println("index: " + index);
+		int noOfQuestions = Integer.parseInt(request.getParameter("noOfQuestions"));
+		System.out.println("No. Of Questions: " + noOfQuestions);
+		String operation = request.getParameter("operation");
+		System.out.println("Operation: " + operation);
+		
+		if(operation.equals("Next")) {
+			if (index < (noOfQuestions - 1)) {
+				index = index + 1;
+			}
+			request.setAttribute("index", index);
+			System.out.println("index: " + index);
+			showExamPage2(request, response,index);
+		} else if(operation.equals("Previous")) {
+			if (index > 0) {
+				index = index - 1;
+			}
+			request.setAttribute("index", index);
+			System.out.println("index: " + index);
+			showExamPage2(request, response,index);
+		} else if (operation.equals("Submit")) {
+			if (index < noOfQuestions) {
+				index = index + 1;
+			}
+			request.setAttribute("index", index);
+			String name = request.getParameter("userName");
+			String qid = request.getParameter("questionId");
+			String qTopic = request.getParameter("questionTopic");
+			String ques = request.getParameter("question");
+			String time = request.getParameter("time");
+			String email = request.getParameter("userEmail");
+			String optionSelected = request.getParameter("option");
+			String sessionId = request.getParameter("sessionId");
+			String correctOption = request.getParameter("answer");
+			System.out.println("time: "+ time);
+			System.out.println("name: " + name);
+			System.out.println("email: " + email);
+			System.out.println("qid: " + qid);
+			System.out.println("qTopic: " + qTopic);
+			System.out.println("ques: " + ques);
+			System.out.println("correctOption: " + correctOption);
+			System.out.println("optionSelected: " + optionSelected);
+			System.out.println("sessionId: " + sessionId);
+			if( isResultPresent(name, email, qid, qTopic, ques) ) {
+				
+				int resultId = getResultId(name, email, qid, qTopic, ques);
+				
+				try {
+					Connection con = null;
+					PreparedStatement pstmt = null;
+					response.setContentType("text/html");
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					con = DriverManager.getConnection("jdbc:mysql://localhost:3306/userdb", "root", "12345");
+					
+					pstmt = con.prepareStatement(
+							"update results set optionSelected = ?, sessionId=?, time=? where resultId = ?;");
+					pstmt.setString(1, optionSelected);
+					pstmt.setString(2, sessionId);
+					pstmt.setString(3, time);
+					pstmt.setInt(4, resultId);
+					System.out.println(pstmt);
+
+					pstmt.executeUpdate();
+				} catch (ClassNotFoundException cnfe) {
+					System.out.println("Class Not Found");
+				} catch (SQLException ex) {
+					printSQLException(ex);
+				}
+				
+			}else {
+				try {
+					Connection con = null;
+					PreparedStatement pstmt = null;
+					response.setContentType("text/html");
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					con = DriverManager.getConnection("jdbc:mysql://localhost:3306/userdb", "root", "12345");
+					
+					pstmt = con.prepareStatement(
+							"insert into results (name,email,qid,qTopic,ques,correctOption,optionSelected,sessionId,time) values(?,?,?,?,?,?,?,?,?)");
+					pstmt.setString(1, name);
+					pstmt.setString(2, email);
+					pstmt.setString(3, qid);
+					pstmt.setString(4, qTopic);
+					pstmt.setString(5, ques);
+					pstmt.setString(6, correctOption);
+					pstmt.setString(7, optionSelected);
+					pstmt.setString(8, sessionId);
+					pstmt.setString(9, time);
+					System.out.println(pstmt);
+
+					pstmt.executeUpdate();
+				} catch (ClassNotFoundException cnfe) {
+					System.out.println("Class Not Found");
+				} catch (SQLException ex) {
+					printSQLException(ex);
+				}
+			}
+			
+			if(index < noOfQuestions) {
+				showExamPage2(request, response,index);			
+			}
+			else{
+				RequestDispatcher dispatcher = request.getRequestDispatcher("Exam-Complete-Page.jsp");
+				dispatcher.forward(request, response);				
+			}
+		}
+		
+		
+	}
+	protected Connection getConnection() {
+		Connection connection = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/userdb", "root", "12345");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return connection;
+	}
 	
+	public boolean isResultPresent(String name, String email,String qid,String qTopic,String ques) {
+
+		Connection con = getConnection();
+		
+		boolean isPresent = false;
+	
+		String sql = "select * from results where name=? and email=? and qid=? and qTopic=? and ques=?;";
+		
+		PreparedStatement ps;
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+//			ps.setString(3, loginBean.getAdminName());
+//			ps.setString(1, loginBean.getAdminEmail());
+//			ps.setString(2, loginBean.getPassword());
+			
+			ps.setString(1, name);
+			ps.setString(2, email);
+			ps.setString(3, qid);
+			ps.setString(4, qTopic);
+			ps.setString(5, ques);
+			
+			System.out.println(ps);
+			
+			ResultSet rs = ps.executeQuery();
+			isPresent = rs.next();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}
+		
+		return isPresent;		
+		
+	}
+	public int getResultId(String name, String email,String qid,String qTopic,String ques) {
+
+		Connection con = getConnection();
+		ResultSet rs = null;
+		int resultId = -1;
+	
+		String sql = "select * from results where name=? and email=? and qid=? and qTopic=? and ques=?;";
+		
+		PreparedStatement ps;
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+//			ps.setString(3, loginBean.getAdminName());
+//			ps.setString(1, loginBean.getAdminEmail());
+//			ps.setString(2, loginBean.getPassword());
+			
+			ps.setString(1, name);
+			ps.setString(2, email);
+			ps.setString(3, qid);
+			ps.setString(4, qTopic);
+			ps.setString(5, ques);
+			
+			System.out.println(ps);
+			
+			rs = ps.executeQuery();
+			if(rs.next()){
+				   resultId = rs.getInt("resultId");
+			}
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}
+		
+		return resultId;		
+		
+	}
+	
+	private void showExamPage1(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String topicName = request.getParameter("subjectName");
+		request.setAttribute("topicName", topicName);
+		List<TopicBean> selectedQuestions = topicDao.selectAllQuestionsWithSubjectName(topicName);
+		int index =0;
+		request.setAttribute("index", index);
+		request.setAttribute("noOfQuestions", selectedQuestions.size());
+		request.setAttribute("oneByOneQuestion", selectedQuestions.get(index));
+		request.setAttribute("selectedQuestions", selectedQuestions);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-page.jsp");
+		dispatcher.forward(request, response);	
+		
+	}
+	
+	private void showExamPage2(HttpServletRequest request, HttpServletResponse response, int index)
+			throws ServletException, IOException {
+		String topicName = request.getParameter("questionTopic");
+		List<TopicBean> selectedQuestions = topicDao.selectAllQuestionsWithSubjectName(topicName);
+		request.setAttribute("noOfQuestions", selectedQuestions.size());
+		request.setAttribute("oneByOneQuestion", selectedQuestions.get(index));
+		request.setAttribute("selectedQuestions", selectedQuestions);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-page.jsp");
+		dispatcher.forward(request, response);	
+		
+	}
+
+	private void printSQLException(SQLException ex) {
+		for (Throwable e : ex) {
+			if (e instanceof SQLException) {
+				e.printStackTrace(System.err);
+				System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+				System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+				System.err.println("Message: " + e.getMessage());
+				Throwable t = ex.getCause();
+				while (t != null) {
+					System.out.println("Cause: " + t);
+					t = t.getCause();
+				}
+			}
+		}
+	}
+
+	private void showChooseTopicForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-topic-page.jsp");
+		dispatcher.forward(request, response);	
+	}
+
 	
 	private void listQuestions(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
@@ -289,8 +582,8 @@ public class UserServlet extends HttpServlet {
 	private void insertUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
-		String country = request.getParameter("country");
-		User newUser = new User(name, email, country);
+		String password = request.getParameter("password");
+		User newUser = new User(name, email, password);
 		userDao.insertUser(newUser);
 		response.sendRedirect("list");
 	}
@@ -299,9 +592,9 @@ public class UserServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
-		String country = request.getParameter("country");
+		String password = request.getParameter("password");
 
-		User book = new User(id, name, email, country);
+		User book = new User(id, name, email, password);
 		userDao.updateUser(book);
 		response.sendRedirect("list");
 	}

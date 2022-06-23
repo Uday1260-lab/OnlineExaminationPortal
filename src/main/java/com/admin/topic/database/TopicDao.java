@@ -144,7 +144,7 @@ public class TopicDao {
 				String choiceA = rs.getString("choiceA");
 				String choiceB = rs.getString("choiceB");
 				String choiceC = rs.getString("choiceC");
-				String choiceD = rs.getString("choiceB");
+				String choiceD = rs.getString("choiceD");
 				String answer = rs.getString("answer");
 				topicBeans.add(new TopicBean(topicName, questionId, question, choiceA, choiceB, choiceC, choiceD, answer));
 			}

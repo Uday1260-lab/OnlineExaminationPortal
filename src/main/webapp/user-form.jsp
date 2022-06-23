@@ -206,9 +206,9 @@ color: #F0ECE3;
 		</div>
 
 		<div class="form-group">
-			<label class="card-form-label">User Country: </label> <input type="text"
-				value="<c:out value='${user.country}'/>" class="card-form-input"
-				name="country" required="required">
+			<label class="card-form-label">User Password: </label> <input type="text"
+				value="<c:out value='${user.userPassword}'/>" class="card-form-input"
+				name="password" required="required">
 		</div>
 		<div class="form-group">
 		<button type="submit" class="card-form-submit-btn">Save</button>

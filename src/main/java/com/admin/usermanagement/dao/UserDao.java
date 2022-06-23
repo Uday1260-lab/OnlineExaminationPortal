@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.admin.login.bean.LoginBean;
 import com.admin.usermanagement.bean.User;
 
 public class UserDao {
@@ -16,15 +17,14 @@ public class UserDao {
 	private String jdbcPassword = "12345";
 	private String jdbcDriver = "com.mysql.cj.jdbc.Driver";
 	
-	private static final String INSERT_USERS_SQL = "insert into users (name, email, country) values (?, ?, ?);";
-	private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where id =?";
+	private static final String INSERT_USERS_SQL = "insert into users (name, email, password) values (?, ?, ?);";
+	private static final String SELECT_USER_BY_ID = "select id,name,email,password from users where id =?";
 	private static final String SELECT_ALL_USERS = "select * from users";
 	private static final String DELETE_USERS_SQL = "delete from users where id = ?;";
-	private static final String UPDATE_USERS_SQL = "update users set name = ?,email= ?, country =? where id = ?;";
+	private static final String UPDATE_USERS_SQL = "update users set name = ?,email= ?, password =? where id = ?;";
 
 	public UserDao() {
 	}
-
 	protected Connection getConnection() {
 		Connection connection = null;
 		try {
@@ -39,7 +39,76 @@ public class UserDao {
 		}
 		return connection;
 	}
+	
+	public boolean validate(User user) {
 
+		Connection con = getConnection();
+		
+		boolean status = false;
+	
+		String sql = "select * from users where name=? and email=? and password=? ";
+		
+//		String sql = "SELECT * FROM adminlist WHERE adminEmail=? AND password=? ;";
+		
+		PreparedStatement ps;
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+//			ps.setString(3, loginBean.getAdminName());
+//			ps.setString(1, loginBean.getAdminEmail());
+//			ps.setString(2, loginBean.getPassword());
+			
+			ps.setString(1, user.getName());
+			ps.setString(2, user.getEmail());
+			ps.setString(3, user.getUserPassword());
+			
+			System.out.println(ps);
+			
+			ResultSet rs = ps.executeQuery();
+			status = rs.next();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}
+		
+		return status;		
+		
+	}
+
+	public ResultSet getDetails(User user) {
+
+		Connection con = getConnection();
+	
+		String sql = "select * from user where name=? and email=? and password=? ";
+		
+		ResultSet rs = null;
+		
+		PreparedStatement ps;
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			
+			ps.setString(1, user.getName());
+			ps.setString(2, user.getEmail());
+			ps.setString(3, user.getUserPassword());
+			
+			System.out.println(ps);
+			
+			rs = ps.executeQuery();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}
+		
+		return rs;
+	}
+	
 	public void insertUser(User user) throws SQLException {
 		System.out.println(INSERT_USERS_SQL);
 		// try-with-resource statement will auto close the connection.
@@ -47,7 +116,7 @@ public class UserDao {
 				PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
 			preparedStatement.setString(1, user.getName());
 			preparedStatement.setString(2, user.getEmail());
-			preparedStatement.setString(3, user.getCountry());
+			preparedStatement.setString(3, user.getUserPassword());
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -70,8 +139,8 @@ public class UserDao {
 			while (rs.next()) {
 				String name = rs.getString("name");
 				String email = rs.getString("email");
-				String country = rs.getString("country");
-				user = new User(id, name, email, country);
+				String password = rs.getString("password");
+				user = new User(id, name, email, password);
 			}
 		} catch (SQLException e) {
 			printSQLException(e);
@@ -97,8 +166,8 @@ public class UserDao {
 				int id = rs.getInt("id");
 				String name = rs.getString("name");
 				String email = rs.getString("email");
-				String country = rs.getString("country");
-				users.add(new User(id, name, email, country));
+				String password = rs.getString("password");
+				users.add(new User(id, name, email, password));
 			}
 		} catch (SQLException e) {
 			printSQLException(e);
@@ -123,7 +192,7 @@ public class UserDao {
 			System.out.println("updated USer:"+statement);
 			statement.setString(1, user.getName());
 			statement.setString(2, user.getEmail());
-			statement.setString(3, user.getCountry());
+			statement.setString(3, user.getUserPassword());
 			statement.setInt(4, user.getId());
 
 			rowUpdated = statement.executeUpdate() > 0;

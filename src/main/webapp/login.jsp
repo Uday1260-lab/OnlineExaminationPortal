@@ -198,32 +198,27 @@ body {
 			<h1 class="login-section-group-heading">Users Login Form</h1>
 
 
-			<form class="login-section-group-form" action="login" method="post">
+			<form class="login-section-group-form" action="userLogin" method="post">
 
 				<div class="label-input">
 					<label class="login-section-group-form-label">User Name: </label><input
 						class="login-section-group-form-input" type="text"
 						placeholder="User name here..." required="required"
-						name="adminName" />
+						name="username" />
 				</div>
 				<div class="label-input">
 					<label class="login-section-group-form-label">User Email: </label><input
 						class="login-section-group-form-input" type="email"
 						placeholder="User email here..." required="required"
-						name="adminEmail" />
+						name="useremail" />
 				</div>
 				<div class="label-input">
-					<label class="login-section-group-form-label">User Country:
-					</label><input class="login-section-group-form-input" type="email"
-						placeholder="User country here..." required="required"
-						name="adminEmail" />
+					<label class="login-section-group-form-label">Password:
+					</label><input class="login-section-group-form-input" type="password"
+						placeholder="User password here..." required="required"
+						name="userpassword" />
 				</div>
-				<div class="label-input">
-					<label class="login-section-group-form-label">Password: </label><input
-						class="login-section-group-form-input" type="password"
-						placeholder="--/--/----" required="required" name="password" />
-				</div>
-				<p class="login-section-group-form-p">*Password is your D.O.B.</p>
+				<p class="login-section-group-form-p">*Password same as given by the Admin.</p>
 				<button class="login-section-group-form-button" type="submit">Login</button>
 
 

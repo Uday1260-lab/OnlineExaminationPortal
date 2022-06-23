@@ -136,11 +136,16 @@ transition: all 0.2s;
 }
 .card-form-input:focus{
 outline: none;
-border-bottom: 3px #43919B solid;
-transform: scale(1.1);
+border-bottom: 3px #3EC70B solid;
 }
-.card-form-input:hover{
-transform: scale(1.1);
+.card-form-textarea{
+width: 41vw;
+border: none;
+border-bottom: 2px #247881 solid;
+}
+.card-form-textarea:focus{
+outline: none;
+border-bottom: 3px #3EC70B solid;
 }
 .card-form-submit-btn{
 margin-top: 1rem;
@@ -202,11 +207,9 @@ color: #F0ECE3;
 				<label class="card-form-label">Topic Name: </label><input type="text" value="<c:out value="${questions.topicName}" />" name="topicName" required="required" class="card-form-input" />
 			</div>
         </c:if>
-		
 		<div class="form-group">
-			<label class="card-form-label">Question: </label> <input type="text" value="<c:out value="${questions.question}" />" name="question" class="card-form-input" required="required" />
+			<label class="card-form-label">Question: </label><textarea class="card-form-textarea" name="question" rows="5" cols="50" required="required"><c:out value="${questions.question}" /></textarea>
 		</div>
-
 		<div class="form-group">
 			<label class="card-form-label">Option 1: </label> <input type="text" value="<c:out value="${questions.choice1}" />" class="card-form-input" name="choiceA" required="required" />
 		</div>
