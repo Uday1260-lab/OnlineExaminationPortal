@@ -135,6 +135,15 @@ public class UserServlet extends HttpServlet {
 				case "/updateQuestion":
 					updateQuestion(request, response);
 					break;
+				case "/showSubjectPage":
+					showSubjectsPage(request, response);
+					break;
+				case "/showSubjectQuestionInspectionPage":
+					showSubjectQuestionInspectionPage(request, response);
+					break;
+				case "/showUserTablePage":
+					showUserTablePage(request, response);
+					break;
 				default:
 					request.setAttribute("reloaded", true);
 					listSubjects(request, response);
@@ -184,6 +193,8 @@ public class UserServlet extends HttpServlet {
 	private void saveExamAnswers(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
 		int index = Integer.parseInt(request.getParameter("index"));
 		System.out.println("index: " + index);
+		int marks = Integer.parseInt(request.getParameter("marks"));
+		System.out.println("Initial marks: " + marks);
 		int noOfQuestions = Integer.parseInt(request.getParameter("noOfQuestions"));
 		System.out.println("No. Of Questions: " + noOfQuestions);
 		String operation = request.getParameter("operation");
@@ -226,6 +237,17 @@ public class UserServlet extends HttpServlet {
 			System.out.println("correctOption: " + correctOption);
 			System.out.println("optionSelected: " + optionSelected);
 			System.out.println("sessionId: " + sessionId);
+			if( optionSelected.equals(correctOption) ) {
+				marks = marks + 10;
+				System.out.println("Final marks: " + marks);
+				request.setAttribute("marks", marks);
+			}else {
+				System.out.println("Wrong Answer Chosen");
+				marks = marks - 3;
+				System.out.println("Final marks: " + marks);
+				request.setAttribute("marks", marks);
+				
+			}
 			if( isResultPresent(name, email, qid, qTopic, ques) ) {
 				
 				int resultId = getResultId(name, email, qid, qTopic, ques);
@@ -285,6 +307,7 @@ public class UserServlet extends HttpServlet {
 				showExamPage2(request, response,index);			
 			}
 			else{
+				request.setAttribute("qTopic", qTopic);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("Exam-Complete-Page.jsp");
 				dispatcher.forward(request, response);				
 			}
@@ -390,7 +413,9 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("topicName", topicName);
 		List<TopicBean> selectedQuestions = topicDao.selectAllQuestionsWithSubjectName(topicName);
 		int index =0;
+		int marks =0;
 		request.setAttribute("index", index);
+		request.setAttribute("marks", marks);
 		request.setAttribute("noOfQuestions", selectedQuestions.size());
 		request.setAttribute("oneByOneQuestion", selectedQuestions.get(index));
 		request.setAttribute("selectedQuestions", selectedQuestions);
@@ -406,6 +431,7 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("noOfQuestions", selectedQuestions.size());
 		request.setAttribute("oneByOneQuestion", selectedQuestions.get(index));
 		request.setAttribute("selectedQuestions", selectedQuestions);
+		request.setAttribute("topicName", topicName);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-page.jsp");
 		dispatcher.forward(request, response);	
 		
@@ -452,6 +478,40 @@ public class UserServlet extends HttpServlet {
 //		RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
 //		dispatcher.forward(request, response);
 	
+	}
+	
+	private void showSubjectsPage(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+
+		List<TopicBean> topicBeans = topicDao.selectAllQuestions();
+		request.setAttribute("questionsList", topicBeans);
+		List<SubjectBean> subjectBeans = subjectDao.selectAllSubjects();
+		request.setAttribute("subjects", subjectBeans);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("Manage-Subject-Page.jsp");
+		dispatcher.forward(request, response);	
+	}	
+	private void showUserTablePage(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+
+		List<User> listUser = userDao.selectAllUsers();
+		request.setAttribute("listUser", listUser);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("User-List-Table.jsp");
+		dispatcher.forward(request, response);
+	}
+	
+	private void showSubjectQuestionInspectionPage(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+
+		String subjectId =request.getParameter("subjectId");
+		request.setAttribute("subjectId", subjectId);		
+		String subjectName =request.getParameter("subjectName");
+		request.setAttribute("subjectName", subjectName);		
+		List<TopicBean> topicBeans = topicDao.selectAllQuestions();
+		request.setAttribute("questionsList", topicBeans);
+		List<SubjectBean> subjectBeans = subjectDao.selectAllSubjects();
+		request.setAttribute("subjects", subjectBeans);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("SubjectWise-Questions-Inspection-Page.jsp");
+		dispatcher.forward(request, response);	
 	}
 
 	private void showNewQuestionForm(HttpServletRequest request, HttpServletResponse response)

@@ -227,6 +227,7 @@ body {
 				<input type="hidden" name="sessionId" value="<%=sesid%>"> <input
 					type="hidden" name="noOfQuestions" value="${noOfQuestions}">
 				<input type="hidden" name="time" value="<%=new java.util.Date()%>">
+				<input type="hidden" name="marks" value="${marks}">
 				<div class="options">
 					<label class="options-label">Option A : </label><input
 						class="options-input" type="radio" name="option"

@@ -1,12 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@page import="java.util.function.Function"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List,com.admin.topic.bean.TopicBean"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Users Management Application</title>
+<meta charset="ISO-8859-1">
+<title>Subject Management Application</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -193,7 +194,6 @@ margin-top:1rem;
 .list-subjects {
 	height: 10vh;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
 }
 
@@ -362,6 +362,10 @@ margin-top:1rem;
 	font-size: 1.25rem;
 }
 
+.subject-bar {
+	display: flex;
+	align-items: center;
+}
 .user-credentials{
 padding-left: 2.5rem;
 padding-top: 0.5rem;
@@ -370,70 +374,51 @@ font-size: 1.25rem;
 color: #C6DCE4;
 background-image: linear-gradient( to right, #1363DF, #47B5FF);
 }
-
-.card-group{
-margin-top: 1rem;
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-min-height: 30rem;
-justify-content: space-around;
-grid-gap: 10rem;
-}
 .subject-management-bar{
-display: grid;
-margin-left: 5rem;
-margin-right: 5rem;
-border-radius: 1rem;
-overflow: hidden;
-grid-template-columns: 1fr;
-grid-template-rows: 6fr 4fr;
-text-align: center;
-align-items: center;
-background-image: linear-gradient( to right bottom, #F2D7D9, #D3CEDF);
+display: flex;
+height: 20rem;
+flex-direction: column;
+justify-content: center;
 }
-.subject-management-bar-h1{
-background-image: linear-gradient( to right bottom, #87805E, #D8CCA3);
-font-size: 2.5rem;
-justify-self: center;
-align-self: center;
-padding-top: 10rem;
-width: 100%;
-height: 100%;
-color: #FFFFDE;
-}
+
 .subject-management-bar-a:link, .subject-management-bar-a:visited{
-justify-self: center;
-align-self: center;
-text-align: center;
+	transition: all 0.25s;
 text-decoration: none;
-font-size: 1.75rem;
+font-size: 1.5rem;
+margin-left: 5rem;
+margin-top: 2rem;
+padding: 1rem 0.5rem;
+color: #FFFDDE;
+background-color: #548CFF;
+text-align: center;
 width: 20rem;
-padding-bottom: 1rem;
-padding-top: 1rem;
-color: #F9F9F9;
-background-color: #1363DF;
-transition: all 0.2s;
-border-bottom-right-radius: 2rem;
-border-top-left-radius: 2rem;
+border-bottom-right-radius: 1rem;
+border-top-left-radius: 1rem;
 }
 .subject-management-bar-a:hover{
-transform: scale(1.1) translateY(-3px);
-background-color: #A760FF;
-border-bottom-left-radius: 2rem;
-border-top-right-radius: 2rem;
+background-color: #7900FF;	
+}
+.subject-management-bar-h1{
+margin-left: 5rem;
+	font-size: 3rem;
+}
+
+.subject-card-group{
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+grid-gap: 5rem;
 }
 </style>
-
 </head>
 <body>
-	<header>
+<header>
 		<div class="list-page-header">
 			<h1 class="list-page-header-main-heading">Online Examination
 				Portal</h1>
 		</div>
 
 		<div class="list-page-nav">
-			<h3 class="list-page-nav-h3">Management Application</h3>
+			<h3 class="list-page-nav-h3">Subjects Management Application</h3>
 			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Control
 				Panel</a>
 		</div>
@@ -450,51 +435,74 @@ border-top-right-radius: 2rem;
 				<p id="date">Date: </p>
 			</div>
 	</header>
-	<c:if test="${reloaded == null || reloaded == false }">
-		<c:if test="${adminDetails != null }">
-			<h3 class="list-welcome-h3">
-				Hi,
-				<c:out value="${adminDetails.adminName}" />
-				Welcome to Online Examination Portal
-			</h3>
-			<p class="list-welcome-p">To proceed click on the Control panel
-				button</p>
-			<p class="list-welcome-p2">Online Examination Portal is an online assessment
-				and knowledge management solution used by many corporate,
-				Professional Training Institutes, Universities. The platform is used
-				to conduct assessments, aptitude tests, psychometric tests and
-				personality tests, entrance exams, hiring assessment tests. The
-				platform provides flexibility to define online assessment with
-				various attributes like negative marking, random questions, variable
-				marking, etc. You can conduct an assessment using a computer,
-				mobile, tablet devices. There is a facility to conduct offline
-				assessments which can be synced with the main system after the
-				assessment is completed.</p>
-		</c:if>
-		<c:if test="${adminDetails == null }">
-			<h3 class="list-welcome-h3">
-				Sorry, You are not logged-in :( <br /> Please Login!!!
-			</h3>
-			<p class="list-welcome-p">
-				To Login <a href="login.jsp">Click Here!</a>
-			</p>
-		</c:if>
-	</c:if>
-	<c:if test="${reloaded == true }">
+	
 		<div class="list">
-			<div class="card-group">
-				<div class="subject-management-bar">
-					<h1 class="subject-management-bar-h1">Manage Users List</h1>
-					<a href="showUserTablePage" class="subject-management-bar-a">Manage Users</a>
-				</div>
-				<div class="subject-management-bar">
-					<h1 class="subject-management-bar-h1">Manage Subjects List</h1>
-					<a href="showSubjectPage" class="subject-management-bar-a">Manage Subjects</a>
-				</div>
+		<div class="list-subjects">
+				<h3 class="list-subjects-top-header"><c:out value="${subjectName}" /></h3>
+				<div class="action">
+								<a
+									href='updateSubjectForm?subjectId=<c:out value="${subjectId}" />&subjectName=<c:out value="${subjectName}" />'
+									class="action-update">Update</a> <a
+									href='deleteSubject?subjectId=<c:out value="${subjectId}" />&subjectName=<c:out value="${subjectName}" />'
+									class="action-delete">Delete</a>
+							</div>
 			</div>
-		</div>
-	</c:if>
-	<script type="text/javascript">
+					<hr class="list-hr">
+
+					
+					<c:if test="${questionsList !=null}">
+						<c:forEach var="question" items="${questionsList }">
+							<c:if test="${question.topicName == subjectName}">
+								<%
+								session.setAttribute("present", true);
+								%>
+								<div class="list-question-answer-block">
+									<h2 class="list-subjects-question">
+										<span class="question">Question:</span>
+										<c:out value="${question.question}" />
+									</h2>
+									<p class="list-subjects-p">
+										Option(A):
+										<c:out value="${question.choice1}" />
+									</p>
+									<p class="list-subjects-p">
+										Option(B):
+										<c:out value="${question.choice2}" />
+									</p>
+									<p class="list-subjects-p">
+										Option(C):
+										<c:out value="${question.choice3}" />
+									</p>
+									<p class="list-subjects-p">
+										Option(D):
+										<c:out value="${question.choice4}" />
+									</p>
+									<p class="list-subjects-p">
+										Answer:
+										<c:out value="${question.answer}" />
+									</p>
+									<div class="action">
+										<a
+											href='editQuestion?questionId=<c:out value="${question.questionId}" />'
+											class="action-update">Edit</a> <a
+											href='deleteQuestion?questionId=<c:out value="${question.questionId}" />'
+											class="action-delete">Delete</a>
+									</div>
+								</div>
+							</c:if>
+						</c:forEach>
+						<c:if test="${present == false}">
+							<h3 class="not-found-h3">No questions for this subject are
+								present!!</h3>
+							<p class="not-found-p">Click "Add new" button to add a new
+								question.</p>
+						</c:if>
+					</c:if>
+					<hr class="list-hr">
+	</div>
+	
+	
+<script type="text/javascript">
 setInterval(displayTimeAndDate, 100);
 function displayTimeAndDate() {
 	var time= new Date();
@@ -537,6 +545,6 @@ function displayTimeAndDate() {
 	document.getElementById("date").innerHTML = "Date: " + day + ", " + date + "/" + month + "/" + year;
 }
 </script>
-	
+
 </body>
 </html>
