@@ -91,9 +91,9 @@ color: #3B44F6;
 .result-table{
 margin-top: 2rem;
 font-size: 1.75rem;
-width: 70%;
-margin-left: 15%;
-margin-right: 15%; 
+width: 80%;
+margin-left: 10%;
+margin-right: 10%; 
 background-color: #DAEAF1;
 border: solid;
 padding: 1rem;
@@ -154,62 +154,6 @@ color: #FFE5B4;
 </style>
 </head>
 <body>
-	<%
-	String finalMarks = request.getParameter("marks").toString();
-	int marks = Integer.parseInt(finalMarks);
-	String totalQuestion = request.getParameter("noOfQuestions").toString();
-	int noOfQuestion = Integer.parseInt(totalQuestion);
-	int totalMarks = 10 * noOfQuestion;
-	int percentage = (marks * 100) / totalMarks;
-	String grade = "Not Evaluated";
-	String remark = "Not Evaluated";
-	String classSelector = "";
-	if (percentage >= 90) {
-		grade = "A+ Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 85) {
-		grade = "A Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 80) {
-		grade = "A- Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 75) {
-		grade = "B+ Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 70) {
-		grade = "B Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 65) {
-		grade = "C+ Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 60) {
-		grade = "C Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 55) {
-		grade = "D+ Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 50) {
-		grade = "D Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else if (percentage >= 40) {
-		grade = "E Grade";
-		remark = "PASS";
-		classSelector = "";
-	} else {
-		grade = "F Grade";
-		remark = "FAIL";
-		classSelector = "";
-	}
-	%>
 	<header>
 		<div class="list-page-header">
 			<h1 class="list-page-header-main-heading">Online Examination
@@ -229,53 +173,52 @@ color: #FFE5B4;
 		</div>
 	</header>
 	<div class="result">
-		<%
-		if (percentage < 40) {
-		%>
+		<c:if test="${report.score < 40 }">
 		<h1 class="result-h1-Disqualified">Disqualified! You have not
 			passed this exam!!</h1>
-		<%
-		} else {
-		%>
+		</c:if>
+		<c:if test="${report.score >= 40 }">
 		<h1 class="result-h1-Congratulations">Congratulations! You have
 			passed this exam!!</h1>
-		<%
-		}
-		%>
+		</c:if>
 
 		<h1 class="exam-name">Preliminary Examination Score Report</h1>
 		<table class="result-table">
 			<tr>
 				<td class="result-table-td">Exam Date:</td>
-				<td class="result-table-td"><%=new java.util.Date()%></td>
+				<td class="result-table-td"><c:out value="${report.date}" /></td>
+			</tr>
+			<tr>
+				<td class="result-table-td">Session Id:</td>
+				<td class="result-table-td"><c:out value="${report.sessionId}" /></td>
 			</tr>
 			<tr>
 				<td class="result-table-td">Student Name:</td>
-				<td class="result-table-td"><c:out value="${userDetails.name}" /></td>
+				<td class="result-table-td"><c:out value="${report.name}" /></td>
 			</tr>
 			<tr>
 				<td class="result-table-td">Student Email:</td>
-				<td class="result-table-td"><c:out value="${userDetails.email}" /></td>
+				<td class="result-table-td"><c:out value="${report.email}" /></td>
 			</tr>
 			<tr>
 				<td class="result-table-td">Course Title:</td>
-				<td class="result-table-td"><c:out value="${qTopic}" /></td>
+				<td class="result-table-td"><c:out value="${report.topic}" /></td>
 			</tr>
 			<tr>
 				<td class="result-table-td">Passing Score:</td>
-				<td class="result-table-td">40</td>
+				<td class="result-table-td"><c:out value="${report.passScore}" /></td>
 			</tr>
 			<tr>
 				<td class="result-table-td">Student Score:</td>
-				<td class="result-table-td"><%=percentage%></td>
+				<td class="result-table-td"><c:out value="${report.score}" /></td>
 			</tr>
 			<tr>
 				<td class="result-table-td">Grade:</td>
-				<td class="result-table-td"><%=grade%></td>
+				<td class="result-table-td"><c:out value="${report.grade}" /></td>
 			</tr>
 			<tr>
 				<td class="result-table-td">Remark:</td>
-				<td class="result-table-td"><%=remark%></td>
+				<td class="result-table-td"><c:out value="${report.remark}" /></td>
 			</tr>
 		</table>
 		<div class="result-btn">

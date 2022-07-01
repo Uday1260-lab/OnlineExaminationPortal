@@ -1,6 +1,6 @@
 <%@page import="java.util.function.Function"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List,com.admin.topic.bean.TopicBean"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <!DOCTYPE html>
@@ -185,7 +185,7 @@ body {
 }
 
 .list-welcome-p2 {
-margin-top:1rem;
+	margin-top: 1rem;
 	margin-left: 10rem;
 	font-size: 1.5rem;
 	width: 75rem;
@@ -281,6 +281,11 @@ margin-top:1rem;
 	font-size: 1.5rem;
 	margin-left: 2.5rem;
 }
+.list-subjects-question:first-child {
+margin-top: 1rem;
+	font-size: 1.5rem;
+	margin-left: 2.5rem;
+}
 
 .question {
 	font-size: 1.75rem;
@@ -366,52 +371,77 @@ margin-top:1rem;
 	display: flex;
 	align-items: center;
 }
-.user-credentials{
-padding-left: 2.5rem;
-padding-top: 0.5rem;
-padding-bottom: 0.5rem;
-font-size: 1.25rem;
-color: #C6DCE4;
-background-image: linear-gradient( to right, #1363DF, #47B5FF);
-}
-.subject-management-bar{
-display: flex;
-height: 20rem;
-flex-direction: column;
-justify-content: center;
+
+.user-credentials {
+	padding-left: 2.5rem;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	font-size: 1.25rem;
+	color: #C6DCE4;
+	background-image: linear-gradient(to right, #1363DF, #47B5FF);
 }
 
-.subject-management-bar-a:link, .subject-management-bar-a:visited{
+.subject-management-bar {
+	display: flex;
+	height: 20rem;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.subject-management-bar-a:link, .subject-management-bar-a:visited {
 	transition: all 0.25s;
-text-decoration: none;
-font-size: 1.5rem;
-margin-left: 5rem;
-margin-top: 2rem;
-padding: 1rem 0.5rem;
-color: #FFFDDE;
-background-color: #548CFF;
-text-align: center;
-width: 20rem;
-border-bottom-right-radius: 1rem;
-border-top-left-radius: 1rem;
+	text-decoration: none;
+	font-size: 1.5rem;
+	margin-left: 5rem;
+	margin-top: 2rem;
+	padding: 1rem 0.5rem;
+	color: #FFFDDE;
+	background-color: #548CFF;
+	text-align: center;
+	width: 20rem;
+	border-bottom-right-radius: 1rem;
+	border-top-left-radius: 1rem;
 }
-.subject-management-bar-a:hover{
-background-color: #7900FF;	
+
+.subject-management-bar-a:hover {
+	background-color: #7900FF;
 }
-.subject-management-bar-h1{
-margin-left: 5rem;
+
+.subject-management-bar-h1 {
+	margin-left: 5rem;
 	font-size: 3rem;
 }
 
-.subject-card-group{
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-grid-gap: 5rem;
+.subject-card-group {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+	grid-gap: 5rem;
+}
+
+.add-new-question-sdgsdsdf:link, .add-new-question-sdgsdsdf:visited {
+	text-decoration: none;
+	font-size: 1.5rem;
+	color: #F9F2ED;
+	background-color: #18978F;
+	transition: all 0.2s;
+	padding: 1rem;
+	border-bottom-left-radius: 1rem;
+	border-top-right-radius: 1rem;
+	margin-top: 1rem;
+	margin-left: 5rem;
+}
+
+.add-new-question-sdgsdsdf:hover {
+	transform: scale(1.1) translateY(-3px);
+	color: #FFF9D7;
+	border-top-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	background-color: #A084CF;
 }
 </style>
 </head>
 <body>
-<header>
+	<header>
 		<div class="list-page-header">
 			<h1 class="list-page-header-main-heading">Online Examination
 				Portal</h1>
@@ -423,128 +453,133 @@ grid-gap: 5rem;
 				Panel</a>
 		</div>
 		<div class="user-credentials">
-				<p>
-					Admin Name:
-					<c:out value="${adminDetails.adminName}" />
-				</p>
-				<p>
-					Admin Email:
-					<c:out value="${adminDetails.adminEmail}" />
-				</p>
-				<p id="time">Time: </p>
-				<p id="date">Date: </p>
-			</div>
+			<p>
+				Admin Name:
+				<c:out value="${adminDetails.adminName}" />
+			</p>
+			<p>
+				Admin Email:
+				<c:out value="${adminDetails.adminEmail}" />
+			</p>
+			<p id="time">Time:</p>
+			<p id="date">Date:</p>
+		</div>
 	</header>
-	
-		<div class="list">
+
+	<div class="list">
 		<div class="list-subjects">
-				<h3 class="list-subjects-top-header"><c:out value="${subjectName}" /></h3>
-				<div class="action">
-								<a
-									href='updateSubjectForm?subjectId=<c:out value="${subjectId}" />&subjectName=<c:out value="${subjectName}" />'
-									class="action-update">Update</a> <a
-									href='deleteSubject?subjectId=<c:out value="${subjectId}" />&subjectName=<c:out value="${subjectName}" />'
-									class="action-delete">Delete</a>
-							</div>
+			<h3 class="list-subjects-top-header">
+				<c:out value="${subjectName}" />
+			</h3>
+			<div class="action">
+				<a
+					href='updateSubjectForm?subjectId=<c:out value="${subjectId}" />&subjectName=<c:out value="${subjectName}" />'
+					class="action-update">Update</a> <a
+					href='deleteSubject?subjectId=<c:out value="${subjectId}" />&subjectName=<c:out value="${subjectName}" />'
+					class="action-delete">Delete</a>
 			</div>
-					<hr class="list-hr">
+		</div>
+		<hr class="list-hr">
+		<a href="newQuestion?subject=<c:out value="${subjectName}" />"
+			class="add-new-question-sdgsdsdf">+ Add New Question</a>
 
-					
-					<c:if test="${questionsList !=null}">
-						<c:forEach var="question" items="${questionsList }">
-							<c:if test="${question.topicName == subjectName}">
-								<%
-								session.setAttribute("present", true);
-								%>
-								<div class="list-question-answer-block">
-									<h2 class="list-subjects-question">
-										<span class="question">Question:</span>
-										<c:out value="${question.question}" />
-									</h2>
-									<p class="list-subjects-p">
-										Option(A):
-										<c:out value="${question.choice1}" />
-									</p>
-									<p class="list-subjects-p">
-										Option(B):
-										<c:out value="${question.choice2}" />
-									</p>
-									<p class="list-subjects-p">
-										Option(C):
-										<c:out value="${question.choice3}" />
-									</p>
-									<p class="list-subjects-p">
-										Option(D):
-										<c:out value="${question.choice4}" />
-									</p>
-									<p class="list-subjects-p">
-										Answer:
-										<c:out value="${question.answer}" />
-									</p>
-									<div class="action">
-										<a
-											href='editQuestion?questionId=<c:out value="${question.questionId}" />'
-											class="action-update">Edit</a> <a
-											href='deleteQuestion?questionId=<c:out value="${question.questionId}" />'
-											class="action-delete">Delete</a>
-									</div>
-								</div>
-							</c:if>
-						</c:forEach>
-						<c:if test="${present == false}">
-							<h3 class="not-found-h3">No questions for this subject are
-								present!!</h3>
-							<p class="not-found-p">Click "Add new" button to add a new
-								question.</p>
-						</c:if>
-					</c:if>
-					<hr class="list-hr">
+		<c:if test="${questionsList !=null}">
+			<c:forEach var="question" items="${questionsList }">
+				<c:if test="${question.topicName == subjectName}">
+					<%
+					session.setAttribute("present", true);
+					%>
+					<div class="list-question-answer-block">
+						<h2 class="list-subjects-question">
+							<span class="question">Question:</span>
+							<c:out value="${question.question}" />
+						</h2>
+						<p class="list-subjects-p">
+							Option(A):
+							<c:out value="${question.choice1}" />
+						</p>
+						<p class="list-subjects-p">
+							Option(B):
+							<c:out value="${question.choice2}" />
+						</p>
+						<p class="list-subjects-p">
+							Option(C):
+							<c:out value="${question.choice3}" />
+						</p>
+						<p class="list-subjects-p">
+							Option(D):
+							<c:out value="${question.choice4}" />
+						</p>
+						<p class="list-subjects-p">
+							Answer:
+							<c:out value="${question.answer}" />
+						</p>
+						<div class="action">
+							<a
+								href='editQuestion?questionId=<c:out value="${question.questionId}" />'
+								class="action-update">Edit</a> <a
+								href='deleteQuestion?questionId=<c:out value="${question.questionId}" />'
+								class="action-delete">Delete</a>
+						</div>
+					</div>
+				</c:if>
+			</c:forEach>
+			<c:if test="${present == false}">
+				<h3 class="not-found-h3">No questions for this subject are
+					present!!</h3>
+				<p class="not-found-p">Click "Add new" button to add a new
+					question.</p>
+			</c:if>
+		</c:if>
+		<hr class="list-hr">
 	</div>
-	
-	
-<script type="text/javascript">
-setInterval(displayTimeAndDate, 100);
-function displayTimeAndDate() {
-	var time= new Date();
-	var hrs = time.getHours();
-	var min = time.getMinutes();
-	var sec = time.getSeconds();
-	var year = time.getFullYear();
-	var month = time.getMonth();
-	var date = time.getDate();
-	var day = "GoodDay";
-	switch (time.getDay()) {
-	case 0:
-		day = "Sunday";
-		break;
-	case 1:
-		day = "Monday";
-		break;
-	case 2:
-		day = "Tuesday";
-		break;
-	case 3:
-		day = "Wednesday";
-		break;
-	case 4:
-		day = "Thursday";
-		break;
-	case 5:
-		day = "Friday";
-		break;
-	case 6:
-		day = "Saturday";
-		break;
 
-	default:
-		day = "GoodDay";
-		break;
-	}
-	
-	document.getElementById("time").innerHTML = "Time: " + hrs + ":" + min + ":" + sec;
-	document.getElementById("date").innerHTML = "Date: " + day + ", " + date + "/" + month + "/" + year;
-}
-</script>
+
+	<script type="text/javascript">
+		setInterval(displayTimeAndDate, 1);
+		function displayTimeAndDate() {
+			var time = new Date();
+			var hrs = time.getHours();
+			var min = time.getMinutes();
+			var sec = time.getSeconds();
+			var year = time.getFullYear();
+			var month = time.getMonth();
+			var date = time.getDate();
+			var day = "GoodDay";
+			switch (time.getDay()) {
+			case 0:
+				day = "Sunday";
+				break;
+			case 1:
+				day = "Monday";
+				break;
+			case 2:
+				day = "Tuesday";
+				break;
+			case 3:
+				day = "Wednesday";
+				break;
+			case 4:
+				day = "Thursday";
+				break;
+			case 5:
+				day = "Friday";
+				break;
+			case 6:
+				day = "Saturday";
+				break;
+
+			default:
+				day = "GoodDay";
+				break;
+			}
+
+			document.getElementById("time").innerHTML = "Time: " + hrs + ":"
+					+ min + ":" + sec;
+			document.getElementById("date").innerHTML = "Date: " + day + ", "
+					+ date + "/" + month + "/" + year;
+		}
+	</script>
 
 </body>
 </html>

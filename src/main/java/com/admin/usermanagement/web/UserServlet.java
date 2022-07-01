@@ -18,8 +18,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.admin.login.bean.LoginBean;
+import com.admin.report.reportDatabase.reportDao;
+import com.admin.report.reportItems.reportCard;
+import com.admin.result.bean.responses;
+import com.admin.result.dao.responseDao;
 import com.admin.subject.bean.SubjectBean;
 import com.admin.subject.database.SubjectDao;
 import com.admin.topic.bean.TopicBean;
@@ -39,6 +44,8 @@ public class UserServlet extends HttpServlet {
 	private UserDao userDao;
 	private TopicDao topicDao;
 	private SubjectDao subjectDao;
+	private responseDao responseDao;
+	private reportDao ReportDao;
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -48,6 +55,8 @@ public class UserServlet extends HttpServlet {
 		userDao = new UserDao();
 		topicDao = new TopicDao();
 		subjectDao = new SubjectDao();
+		responseDao = new responseDao();
+		ReportDao = new reportDao();
 
 	}
 
@@ -107,6 +116,12 @@ public class UserServlet extends HttpServlet {
 					break;
 				case "/update":
 					updateUser(request, response);
+					break;
+				case "/showResponses":
+					showUsersResponsesList(request, response);
+					break;
+				case "/showReports":
+					showUsersReportList(request, response);
 					break;
 				case "/newQuestion":
 					showNewQuestionForm(request, response);
@@ -190,7 +205,7 @@ public class UserServlet extends HttpServlet {
 		}
 	}
 
-	private void saveExamAnswers(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
+	private void saveExamAnswers(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException, SQLException {
 		int index = Integer.parseInt(request.getParameter("index"));
 		System.out.println("index: " + index);
 		int marks = Integer.parseInt(request.getParameter("marks"));
@@ -199,6 +214,25 @@ public class UserServlet extends HttpServlet {
 		System.out.println("No. Of Questions: " + noOfQuestions);
 		String operation = request.getParameter("operation");
 		System.out.println("Operation: " + operation);
+
+		String name = request.getParameter("userName");
+		String qid = request.getParameter("questionId");
+		String qTopic = request.getParameter("questionTopic");
+		String ques = request.getParameter("question");
+		String time = request.getParameter("time");
+		String email = request.getParameter("userEmail");
+		String optionSelected = request.getParameter("option");
+		String sessionId = request.getParameter("sessionId");
+		String correctOption = request.getParameter("answer");
+		System.out.println("time: "+ time);
+		System.out.println("name: " + name);
+		System.out.println("email: " + email);
+		System.out.println("qid: " + qid);
+		System.out.println("qTopic: " + qTopic);
+		System.out.println("ques: " + ques);
+		System.out.println("correctOption: " + correctOption);
+		System.out.println("optionSelected: " + optionSelected);
+		System.out.println("sessionId: " + sessionId);
 		
 		if(operation.equals("Next")) {
 			if (index < (noOfQuestions - 1)) {
@@ -214,31 +248,18 @@ public class UserServlet extends HttpServlet {
 			request.setAttribute("index", index);
 			System.out.println("index: " + index);
 			showExamPage2(request, response,index);
-		} else if (operation.equals("Submit")) {
+		} else if (operation.equals("Save")) {
 			if (index < noOfQuestions) {
 				index = index + 1;
 			}
 			request.setAttribute("index", index);
-			String name = request.getParameter("userName");
-			String qid = request.getParameter("questionId");
-			String qTopic = request.getParameter("questionTopic");
-			String ques = request.getParameter("question");
-			String time = request.getParameter("time");
-			String email = request.getParameter("userEmail");
-			String optionSelected = request.getParameter("option");
-			String sessionId = request.getParameter("sessionId");
-			String correctOption = request.getParameter("answer");
-			System.out.println("time: "+ time);
-			System.out.println("name: " + name);
-			System.out.println("email: " + email);
-			System.out.println("qid: " + qid);
-			System.out.println("qTopic: " + qTopic);
-			System.out.println("ques: " + ques);
-			System.out.println("correctOption: " + correctOption);
-			System.out.println("optionSelected: " + optionSelected);
-			System.out.println("sessionId: " + sessionId);
 			if( optionSelected.equals(correctOption) ) {
-				marks = marks + 10;
+				if (marks < 100) {
+					marks = marks + 10;				
+				}
+				if(marks > 100) {
+					marks = 100;
+				}
 				System.out.println("Final marks: " + marks);
 				request.setAttribute("marks", marks);
 			}else {
@@ -304,15 +325,72 @@ public class UserServlet extends HttpServlet {
 			}
 			
 			if(index < noOfQuestions) {
-				showExamPage2(request, response,index);			
-			}
-			else{
-				request.setAttribute("qTopic", qTopic);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("Exam-Complete-Page.jsp");
-				dispatcher.forward(request, response);				
+				showExamPage2(request, response,index);		
+			}else if(index == noOfQuestions) {
+				index = index-1;
+				showExamPage2(request, response,index);		
 			}
 		}
-		
+		else if (operation.equals("Submit")) {
+			String passScore = "40";
+			int totalMarks = 10 * noOfQuestions;
+			int percentage = (marks * 100) / totalMarks;
+			String score = String.valueOf(percentage);
+			String grade = "Not Evaluated";
+			String remark = "Not Evaluated";
+			String classSelector = "";
+			if (percentage >= 90) {
+				grade = "A+ Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 85) {
+				grade = "A Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 80) {
+				grade = "A- Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 75) {
+				grade = "B+ Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 70) {
+				grade = "B Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 65) {
+				grade = "C+ Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 60) {
+				grade = "C Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 55) {
+				grade = "D+ Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 50) {
+				grade = "D Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else if (percentage >= 40) {
+				grade = "E Grade";
+				remark = "PASS";
+				classSelector = "";
+			} else {
+				grade = "F Grade";
+				remark = "FAIL";
+				classSelector = "";
+			}
+			reportCard card = new reportCard(time, name, email, qTopic, passScore, score, grade, remark, sessionId);
+			ReportDao.insertReport(card);
+			request.setAttribute("report", card);
+			request.setAttribute("qTopic", qTopic);				
+			RequestDispatcher dispatcher = request.getRequestDispatcher("Exam-Complete-Page.jsp");
+			dispatcher.forward(request, response);
+		}
 		
 	}
 	protected Connection getConnection() {
@@ -458,8 +536,8 @@ public class UserServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-topic-page.jsp");
 		dispatcher.forward(request, response);	
 	}
-
 	
+
 	private void listQuestions(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		
@@ -469,6 +547,27 @@ public class UserServlet extends HttpServlet {
 //		dispatcher.forward(request, response);
 	
 	}
+	
+	private void showUsersResponsesList(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		
+		List<responses> responseList = responseDao.selectAllResponses();
+		request.setAttribute("responseList", responseList);		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("User-Response-List-Table.jsp");
+		dispatcher.forward(request, response);
+	
+	}
+
+	private void showUsersReportList(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		
+		List<reportCard> reportCardList = ReportDao.selectAllReports();
+		request.setAttribute("reportList", reportCardList);		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("User-Report-List-Table.jsp");
+		dispatcher.forward(request, response);
+	
+	}
+
 	
 	private void listSubjects(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {

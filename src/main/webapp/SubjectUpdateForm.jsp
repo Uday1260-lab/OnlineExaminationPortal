@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Subject Update Form</title>
 <style>
 * {
 	margin: 0;

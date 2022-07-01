@@ -100,10 +100,8 @@ body {
 
 .list-table {
 	text-align: left;
-	width: 80%;
+	width: 100%;
 	margin-top: 3rem;
-	margin-left: 10%;
-	margin-right: 10%;
 	text-align: center;
 	margin-bottom: 7.5rem;
 }
@@ -362,6 +360,10 @@ margin-top:1rem;
 	font-size: 1.25rem;
 }
 
+.subject-bar {
+	display: flex;
+	align-items: center;
+}
 .user-credentials{
 padding-left: 2.5rem;
 padding-top: 0.5rem;
@@ -370,65 +372,33 @@ font-size: 1.25rem;
 color: #C6DCE4;
 background-image: linear-gradient( to right, #1363DF, #47B5FF);
 }
-
-.card-group{
-margin-top: 7.5rem;
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-min-height: 20rem;
-justify-content: space-around;
-grid-gap: 5rem;
-}
 .subject-management-bar{
-display: grid;
-margin-left: 0.5rem;
-margin-right: 0.5rem;
-border-radius: 1rem;
-overflow: hidden;
-grid-template-columns: 1fr;
-grid-template-rows: 6fr 4fr;
-text-align: center;
-align-items: center;
-background-image: linear-gradient( to right bottom, #F2D7D9, #D3CEDF);
-transition: all 0.5s;
+display: flex;
+height: 20rem;
+flex-direction: column;
+justify-content: center;
 }
-.subject-management-bar:hover{
-transform: scale(1.25) translateY(-5px);
-}
-.subject-management-bar:hover .subject-management-bar-h1{
-background-image: linear-gradient( to right bottom, #371B58, #7858A6);
-}
-.subject-management-bar-h1{
-background-image: linear-gradient( to right bottom, #87805E, #D8CCA3);
-font-size: 2.5rem;
-justify-self: center;
-align-self: center;
-padding-top: 10rem;
-width: 100%;
-height: 100%;
-transition: all 0.5s;
-color: #FFFFDE;
-}
+
 .subject-management-bar-a:link, .subject-management-bar-a:visited{
-justify-self: center;
-align-self: center;
-text-align: center;
+	transition: all 0.25s;
 text-decoration: none;
-font-size: 1.75rem;
+font-size: 1.5rem;
+margin-left: 5rem;
+margin-top: 2rem;
+padding: 1rem 0.5rem;
+color: #FFFDDE;
+background-color: #548CFF;
+text-align: center;
 width: 20rem;
-padding-bottom: 1rem;
-padding-top: 1rem;
-color: #F9F9F9;
-background-color: #1363DF;
-transition: all 0.2s;
-border-bottom-right-radius: 2rem;
-border-top-left-radius: 2rem;
+border-bottom-right-radius: 1rem;
+border-top-left-radius: 1rem;
 }
 .subject-management-bar-a:hover{
-transform: scale(1.1) translateY(-3px);
-background-color: #A760FF;
-border-bottom-left-radius: 2rem;
-border-top-right-radius: 2rem;
+background-color: #7900FF;	
+}
+.subject-management-bar-h1{
+margin-left: 5rem;
+	font-size: 3rem;
 }
 </style>
 
@@ -441,7 +411,7 @@ border-top-right-radius: 2rem;
 		</div>
 
 		<div class="list-page-nav">
-			<h3 class="list-page-nav-h3">Management Application</h3>
+			<h3 class="list-page-nav-h3">Users Management Application</h3>
 			<a href="<%=request.getContextPath()%>/list" class="list-page-nav-a">Control
 				Panel</a>
 		</div>
@@ -458,58 +428,51 @@ border-top-right-radius: 2rem;
 				<p id="date">Date: </p>
 			</div>
 	</header>
-	<c:if test="${reloaded == null || reloaded == false }">
-		<c:if test="${adminDetails != null }">
-			<h3 class="list-welcome-h3">
-				Hi,
-				<c:out value="${adminDetails.adminName}" />
-				Welcome to Online Examination Portal
-			</h3>
-			<p class="list-welcome-p">To proceed click on the Control panel
-				button</p>
-			<p class="list-welcome-p2">Online Examination Portal is an online assessment
-				and knowledge management solution used by many corporate,
-				Professional Training Institutes, Universities. The platform is used
-				to conduct assessments, aptitude tests, psychometric tests and
-				personality tests, entrance exams, hiring assessment tests. The
-				platform provides flexibility to define online assessment with
-				various attributes like negative marking, random questions, variable
-				marking, etc. You can conduct an assessment using a computer,
-				mobile, tablet devices. There is a facility to conduct offline
-				assessments which can be synced with the main system after the
-				assessment is completed.</p>
-		</c:if>
-		<c:if test="${adminDetails == null }">
-			<h3 class="list-welcome-h3">
-				Sorry, You are not logged-in :( <br /> Please Login!!!
-			</h3>
-			<p class="list-welcome-p">
-				To Login <a href="login.jsp">Click Here!</a>
-			</p>
-		</c:if>
-	</c:if>
-	<c:if test="${reloaded == true }">
 		<div class="list">
-			<div class="card-group">
-				<div class="subject-management-bar">
-					<h1 class="subject-management-bar-h1">Manage Users List</h1>
-					<a href="showUserTablePage" class="subject-management-bar-a">Manage Users</a>
+			<h3 class="list-heading">List Of User Responses</h3>
+			<hr class="list-hr">
+			<c:if test="${responseList == null}">
+				<div class="list-welcome">
+					<p class="list-welcome-p">No responses Submitted!!</p>
 				</div>
-				<div class="subject-management-bar">
-					<h1 class="subject-management-bar-h1">Manage Subjects List</h1>
-					<a href="showSubjectPage" class="subject-management-bar-a">Manage Subjects</a>
-				</div>
-				<div class="subject-management-bar">
-					<h1 class="subject-management-bar-h1">Inspect Responses</h1>
-					<a href="showResponses" class="subject-management-bar-a">Examine</a>
-				</div>
-				<div class="subject-management-bar">
-					<h1 class="subject-management-bar-h1">View All Reports</h1>
-					<a href="showReports" class="subject-management-bar-a">View</a>
-				</div>
-			</div>
+			</c:if>
+			<c:if test="${responseList != null}">
+				<table class="list-table">
+					<thead class="list-table-thead">
+						<tr>
+							<th class="list-table-thead-th">ResponseID</th>
+							<th class="list-table-thead-th">Name</th>
+							<th class="list-table-thead-th">Email</th>
+							<th class="list-table-thead-th">Question Id</th>
+							<th class="list-table-thead-th">Question Topic</th>
+							<th class="list-table-thead-th">Question</th>
+							<th class="list-table-thead-th">Correct Option</th>
+							<th class="list-table-thead-th">Option Selected</th>
+							<th class="list-table-thead-th">Session Id</th>
+							<th class="list-table-thead-th">Submit Time</th>
+						</tr>
+					</thead>
+					<tbody class="list-table-tbody">
+						<c:forEach var="eachResponse" items="${responseList}">
+							<tr>
+								<td><c:out value="${eachResponse.resultId}" /></td>
+								<td><c:out value="${eachResponse.name}" /></td>
+								<td><c:out value="${eachResponse.email}" /></td>
+								<td><c:out value="${eachResponse.qid}" /></td>
+								<td><c:out value="${eachResponse.qTopic}" /></td>
+								<td><c:out value="${eachResponse.ques}" /></td>
+								<td><c:out value="${eachResponse.correctOption}" /></td>
+								<td><c:out value="${eachResponse.optionSelected}" /></td>
+								<td><c:out value="${eachResponse.sessionId}" /></td>
+								<td><c:out value="${eachResponse.time}" /></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</c:if>
+
+			<hr class="list-hr">
 		</div>
-	</c:if>
 	<script type="text/javascript">
 setInterval(displayTimeAndDate, 1);
 function displayTimeAndDate() {

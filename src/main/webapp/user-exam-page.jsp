@@ -156,8 +156,34 @@ body {
 	transform: scale(1.05) translateY(-3px);
 }
 
-.operation-bar-input-Submit {
+.operation-bar-input-Save {
 	margin-left: 1rem;
+	color: #1f191a;
+	margin-right: 1rem;
+	height: 3rem;
+	width: 10rem;
+	font-size: 1.5rem;
+	text-align: center;
+	border: none;
+	border-bottom-right-radius: 1rem;
+	border-top-left-radius: 1rem;
+	background-image: linear-gradient(to right bottom, #03c2fc, #03b1fc);
+	transition: all 0.5s;
+}
+
+.operation-bar-input-Save:hover {
+	color: #F2FFE9;
+	box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.5);
+	transform: scale(1.1) translateY(-5px);
+	background-image: linear-gradient(to right bottom, #03b1fc, #038cfc);
+}
+.operation-bar-input-Save:active {
+	background-image: linear-gradient(to right bottom, #1F4690, #1363DF);
+	transform: scale(1.05) translateY(-3px);
+}
+
+.operation-bar-input-Submit {
+	margin-left: 50vw;
 	margin-right: 1rem;
 	height: 3rem;
 	width: 10rem;
@@ -267,13 +293,14 @@ body {
 				<c:if test="${ noOfQuestions != (index+1) }">
 				<input class="operation-bar-input-Next" type="submit" name="operation" value="Next" />
 				</c:if>
+				<input class="operation-bar-input-Save" type="submit" name="operation" value="Save" />
 				<input class="operation-bar-input-Submit" type="submit" name="operation" value="Submit" />
 				</div>
 		</form>
 	</div>
 	
 <script type="text/javascript">
-setInterval(displayTimeAndDate, 100);
+setInterval(displayTimeAndDate, 1);
 function displayTimeAndDate() {
 	var time= new Date();
 	var hrs = time.getHours();

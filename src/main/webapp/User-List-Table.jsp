@@ -476,7 +476,7 @@ margin-left: 5rem;
 			<hr class="list-hr">
 		</div>
 	<script type="text/javascript">
-setInterval(displayTimeAndDate, 100);
+setInterval(displayTimeAndDate, 1);
 function displayTimeAndDate() {
 	var time= new Date();
 	var hrs = time.getHours();
