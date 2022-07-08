@@ -11,6 +11,7 @@ import java.util.List;
 import com.admin.report.reportItems.reportCard;
 import com.admin.result.bean.responses;
 import com.admin.topic.bean.TopicBean;
+import com.admin.usermanagement.bean.User;
 
 public class reportDao {
 	private String jdbcURL = "jdbc:mysql://localhost:3306/userdb?useSSL=false";
@@ -93,7 +94,42 @@ public class reportDao {
 		return reportList;
 	}
 	
+	public boolean hasAttemptedBefore(String topicName, String userName, String email) {
 
+		Connection con = getConnection();
+		
+		boolean status = false;
+	
+		String sql = "select * from reports where name=? and email=? and topic=? ";
+		
+		PreparedStatement ps;
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+//			ps.setString(3, loginBean.getAdminName());
+//			ps.setString(1, loginBean.getAdminEmail());
+//			ps.setString(2, loginBean.getPassword());
+			
+			ps.setString(1, userName);
+			ps.setString(2, email);
+			ps.setString(3, topicName);
+			
+			System.out.println(ps);
+			
+			ResultSet rs = ps.executeQuery();
+			status = rs.next();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}
+		
+		return status;		
+		
+	}	
+	
 	private void printSQLException(SQLException ex) {
 		for (Throwable e : ex) {
 			if (e instanceof SQLException) {

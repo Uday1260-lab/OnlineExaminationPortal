@@ -177,8 +177,9 @@ body {
 							<c:out value="${subject.subjectName}" />
 						</h1>
 						<form method="post" action="examServer1" class="subject-card-form">
-							<input type="hidden" required="required" name="subjectName"
-								value="${subject.subjectName}">
+							<input type="hidden" required="required" name="subjectName"	value="${subject.subjectName}">							
+							<input type="hidden" required="required" name="userName" value="${userDetails.name}">
+							<input type="hidden" required="required" name="email" value="${userDetails.email}">
 							<button type="submit" class="subject-card-btn">Start</button>
 						</form>
 					</div>

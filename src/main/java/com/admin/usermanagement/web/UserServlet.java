@@ -214,30 +214,17 @@ public class UserServlet extends HttpServlet {
 		System.out.println("No. Of Questions: " + noOfQuestions);
 		String operation = request.getParameter("operation");
 		System.out.println("Operation: " + operation);
+		long startTime = Long.parseLong(request.getParameter("startTime"));
+		request.setAttribute("startTime", startTime);
+		long examDuration = Long.parseLong(request.getParameter("examDuration"));
+		request.setAttribute("examDuration", examDuration);
 
-		String name = request.getParameter("userName");
-		String qid = request.getParameter("questionId");
-		String qTopic = request.getParameter("questionTopic");
-		String ques = request.getParameter("question");
-		String time = request.getParameter("time");
-		String email = request.getParameter("userEmail");
-		String optionSelected = request.getParameter("option");
-		String sessionId = request.getParameter("sessionId");
-		String correctOption = request.getParameter("answer");
-		System.out.println("time: "+ time);
-		System.out.println("name: " + name);
-		System.out.println("email: " + email);
-		System.out.println("qid: " + qid);
-		System.out.println("qTopic: " + qTopic);
-		System.out.println("ques: " + ques);
-		System.out.println("correctOption: " + correctOption);
-		System.out.println("optionSelected: " + optionSelected);
-		System.out.println("sessionId: " + sessionId);
 		
 		if(operation.equals("Next")) {
 			if (index < (noOfQuestions - 1)) {
 				index = index + 1;
 			}
+			request.setAttribute("marks", marks);
 			request.setAttribute("index", index);
 			System.out.println("index: " + index);
 			showExamPage2(request, response,index);
@@ -245,10 +232,30 @@ public class UserServlet extends HttpServlet {
 			if (index > 0) {
 				index = index - 1;
 			}
+			request.setAttribute("marks", marks);
 			request.setAttribute("index", index);
 			System.out.println("index: " + index);
 			showExamPage2(request, response,index);
 		} else if (operation.equals("Save")) {
+
+			String name = request.getParameter("userName");
+			String qid = request.getParameter("questionId");
+			String qTopic = request.getParameter("questionTopic");
+			String ques = request.getParameter("question");
+			String time = request.getParameter("time");
+			String email = request.getParameter("userEmail");
+			String optionSelected = request.getParameter("option");
+			String sessionId = request.getParameter("sessionId");
+			String correctOption = request.getParameter("answer");
+			System.out.println("time: "+ time);
+			System.out.println("name: " + name);
+			System.out.println("email: " + email);
+			System.out.println("qid: " + qid);
+			System.out.println("qTopic: " + qTopic);
+			System.out.println("ques: " + ques);
+			System.out.println("correctOption: " + correctOption);
+			System.out.println("optionSelected: " + optionSelected);
+			System.out.println("sessionId: " + sessionId);
 			if (index < noOfQuestions) {
 				index = index + 1;
 			}
@@ -269,9 +276,9 @@ public class UserServlet extends HttpServlet {
 				request.setAttribute("marks", marks);
 				
 			}
-			if( isResultPresent(name, email, qid, qTopic, ques) ) {
+			if( isResultPresent(name, email, qid, qTopic, ques, sessionId) ) {
 				
-				int resultId = getResultId(name, email, qid, qTopic, ques);
+				int resultId = getResultId(name, email, qid, qTopic, ques, sessionId);
 				
 				try {
 					Connection con = null;
@@ -281,11 +288,10 @@ public class UserServlet extends HttpServlet {
 					con = DriverManager.getConnection("jdbc:mysql://localhost:3306/userdb", "root", "12345");
 					
 					pstmt = con.prepareStatement(
-							"update results set optionSelected = ?, sessionId=?, time=? where resultId = ?;");
+							"update results set optionSelected = ?, time=? where resultId = ?;");
 					pstmt.setString(1, optionSelected);
-					pstmt.setString(2, sessionId);
-					pstmt.setString(3, time);
-					pstmt.setInt(4, resultId);
+					pstmt.setString(2, time);
+					pstmt.setInt(3, resultId);
 					System.out.println(pstmt);
 
 					pstmt.executeUpdate();
@@ -384,6 +390,24 @@ public class UserServlet extends HttpServlet {
 				remark = "FAIL";
 				classSelector = "";
 			}
+			String name = request.getParameter("userName");
+			String email = request.getParameter("userEmail");
+			String qid = request.getParameter("questionId");
+			String qTopic = request.getParameter("questionTopic");
+			String ques = request.getParameter("question");
+			String time = request.getParameter("time");
+			String optionSelected = request.getParameter("option");
+			String sessionId = request.getParameter("sessionId");
+			String correctOption = request.getParameter("answer");
+			System.out.println("time: "+ time);
+			System.out.println("name: " + name);
+			System.out.println("email: " + email);
+			System.out.println("qid: " + qid);
+			System.out.println("qTopic: " + qTopic);
+			System.out.println("ques: " + ques);
+			System.out.println("correctOption: " + correctOption);
+			System.out.println("optionSelected: " + optionSelected);
+			System.out.println("sessionId: " + sessionId);
 			reportCard card = new reportCard(time, name, email, qTopic, passScore, score, grade, remark, sessionId);
 			ReportDao.insertReport(card);
 			request.setAttribute("report", card);
@@ -408,13 +432,13 @@ public class UserServlet extends HttpServlet {
 		return connection;
 	}
 	
-	public boolean isResultPresent(String name, String email,String qid,String qTopic,String ques) {
+	public boolean isResultPresent(String name, String email,String qid,String qTopic,String ques, String sessionId) {
 
 		Connection con = getConnection();
 		
 		boolean isPresent = false;
 	
-		String sql = "select * from results where name=? and email=? and qid=? and qTopic=? and ques=?;";
+		String sql = "select * from results where name=? and email=? and qid=? and qTopic=? and ques=? and sessionId=?;";
 		
 		PreparedStatement ps;
 		try {
@@ -430,6 +454,7 @@ public class UserServlet extends HttpServlet {
 			ps.setString(3, qid);
 			ps.setString(4, qTopic);
 			ps.setString(5, ques);
+			ps.setString(6, sessionId);
 			
 			System.out.println(ps);
 			
@@ -445,13 +470,13 @@ public class UserServlet extends HttpServlet {
 		return isPresent;		
 		
 	}
-	public int getResultId(String name, String email,String qid,String qTopic,String ques) {
+	public int getResultId(String name, String email,String qid,String qTopic,String ques, String sessionId) {
 
 		Connection con = getConnection();
 		ResultSet rs = null;
 		int resultId = -1;
 	
-		String sql = "select * from results where name=? and email=? and qid=? and qTopic=? and ques=?;";
+		String sql = "select * from results where name=? and email=? and qid=? and qTopic=? and ques=? and sessionId=?;";
 		
 		PreparedStatement ps;
 		try {
@@ -467,6 +492,7 @@ public class UserServlet extends HttpServlet {
 			ps.setString(3, qid);
 			ps.setString(4, qTopic);
 			ps.setString(5, ques);
+			ps.setString(6, sessionId);
 			
 			System.out.println(ps);
 			
@@ -488,17 +514,30 @@ public class UserServlet extends HttpServlet {
 	private void showExamPage1(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String topicName = request.getParameter("subjectName");
-		request.setAttribute("topicName", topicName);
-		List<TopicBean> selectedQuestions = topicDao.selectAllQuestionsWithSubjectName(topicName);
-		int index =0;
-		int marks =0;
-		request.setAttribute("index", index);
-		request.setAttribute("marks", marks);
-		request.setAttribute("noOfQuestions", selectedQuestions.size());
-		request.setAttribute("oneByOneQuestion", selectedQuestions.get(index));
-		request.setAttribute("selectedQuestions", selectedQuestions);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-page.jsp");
-		dispatcher.forward(request, response);	
+		String userName = request.getParameter("userName");
+		String email = request.getParameter("email");
+		if(ReportDao.hasAttemptedBefore(topicName, userName, email) == false) {	
+			
+			Date date = new Date();
+			int examDuration = 120000;
+			request.setAttribute("examDuration", examDuration);
+			request.setAttribute("startTime", date.getTime());
+			request.setAttribute("topicName", topicName);	
+			request.setAttribute("selectedChoice", null);
+			List<TopicBean> selectedQuestions = topicDao.selectAllQuestionsWithSubjectName(topicName);
+			int index =0;
+			int marks =0;
+			request.setAttribute("index", index);
+			request.setAttribute("marks", marks);
+			request.setAttribute("noOfQuestions", selectedQuestions.size());
+			request.setAttribute("oneByOneQuestion", selectedQuestions.get(index));
+			request.setAttribute("selectedQuestions", selectedQuestions);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-page.jsp");
+			dispatcher.forward(request, response);			
+		} else if(ReportDao.hasAttemptedBefore(topicName, userName, email) == true) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-already-attempted.jsp");
+			dispatcher.forward(request, response);			
+		}
 		
 	}
 	
@@ -510,6 +549,42 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("oneByOneQuestion", selectedQuestions.get(index));
 		request.setAttribute("selectedQuestions", selectedQuestions);
 		request.setAttribute("topicName", topicName);
+		String name = request.getParameter("userName");
+		String email = request.getParameter("userEmail");
+		String sessionId = request.getParameter("sessionId");
+		String selectedChoice = null;
+
+		Connection con = getConnection();
+		ResultSet rs = null;
+	
+		String sql = "select * from results where name=? and email=? and qid=? and qTopic=? and ques=? and sessionId=?;";
+		
+		PreparedStatement ps;
+		try {
+			
+			ps = con.prepareStatement(sql);
+			
+			ps.setString(1, name);
+			ps.setString(2, email);
+			ps.setString(3, String. valueOf(selectedQuestions.get(index).getQuestionId()));
+			ps.setString(4, selectedQuestions.get(index).getTopicName());
+			ps.setString(5, selectedQuestions.get(index).getQuestion());
+			ps.setString(6, sessionId);
+			
+			System.out.println(ps);
+			
+			rs = ps.executeQuery();
+			if(rs.next()){
+				selectedChoice = rs.getString("optionSelected");
+			}
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			
+		}	
+		request.setAttribute("selectedChoice", selectedChoice);
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("user-exam-page.jsp");
 		dispatcher.forward(request, response);	
 		

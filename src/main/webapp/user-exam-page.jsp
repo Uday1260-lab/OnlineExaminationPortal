@@ -65,7 +65,7 @@ body {
 }
 
 .exam-form {
-	margin-top: 5rem;
+	margin-top: 2.5rem;
 	margin-left: 10rem;
 }
 
@@ -125,6 +125,7 @@ body {
 	box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.5);
 	background-image: linear-gradient(to right bottom, #03b1fc, #038cfc);
 }
+
 .operation-bar-input-Previous:active {
 	background-image: linear-gradient(to right bottom, #1F4690, #1363DF);
 	transform: scale(1.05) translateY(-3px);
@@ -151,6 +152,7 @@ body {
 	transform: scale(1.1) translateY(-5px);
 	background-image: linear-gradient(to right bottom, #03b1fc, #038cfc);
 }
+
 .operation-bar-input-Next:active {
 	background-image: linear-gradient(to right bottom, #1F4690, #1363DF);
 	transform: scale(1.05) translateY(-3px);
@@ -177,6 +179,7 @@ body {
 	transform: scale(1.1) translateY(-5px);
 	background-image: linear-gradient(to right bottom, #03b1fc, #038cfc);
 }
+
 .operation-bar-input-Save:active {
 	background-image: linear-gradient(to right bottom, #1F4690, #1363DF);
 	transform: scale(1.05) translateY(-3px);
@@ -203,9 +206,18 @@ body {
 	background-image: linear-gradient(to right bottom, #54E346, #9AE66E);
 	transform: scale(1.1) translateY(-5px);
 }
+
 .operation-bar-input-Submit:active {
 	background-image: linear-gradient(to right bottom, #5FD068, #9EB23B);
 	transform: scale(1.05) translateY(-3px);
+}
+.time-left{
+background-color: #1363DF;
+color: #EAF6F6;
+text-align: center;
+}
+.time-left-h1{
+padding: 0.25rem;
 }
 </style>
 </head>
@@ -227,21 +239,31 @@ body {
 					User Email:
 					<c:out value="${userDetails.email}" />
 				</p>
-				<p id="time">Time: </p>
-				<p id="date">Date: </p>
+				<p id="time">Time:</p>
+				<p id="date">Date:</p>
 			</div>
 		</div>
 	</header>
+	<div class="time-left">
+		<h1 id="time-left-h1">Time Remaining:</h1>
+	</div>
 	<div class="exam-section">
 		<form action="saveResult" method="post">
 			<div class="exam-form">
 				<h1 class="exam-form-h1">
 					Question
-					<c:out value="${index+1 }" />
+					<c:if test="${noOfQuestions > (index+1)}">
+						<c:out value="${index+1 }" />
+					</c:if>
+					<c:if test="${noOfQuestions <= (index+1)}">
+						<c:out value="${noOfQuestions}" />
+					</c:if>
 					:
 					<c:out value="${oneByOneQuestion.question}" />
 				</h1>
+				<input type="hidden" name="examDuration" value="${examDuration}">
 				<input type="hidden" name="index" value="${index}"> <input
+					type="hidden" name="startTime" value="${startTime}"> <input
 					type="hidden" name="answer" value="${oneByOneQuestion.answer}">
 				<input type="hidden" name="question"
 					value="${oneByOneQuestion.question}"> <input type="hidden"
@@ -254,94 +276,179 @@ body {
 					type="hidden" name="noOfQuestions" value="${noOfQuestions}">
 				<input type="hidden" name="time" value="<%=new java.util.Date()%>">
 				<input type="hidden" name="marks" value="${marks}">
+				
+				
+				
+				
+				<c:if test="${selectedChoice == oneByOneQuestion.choice1}">
 				<div class="options">
 					<label class="options-label">Option A : </label><input
 						class="options-input" type="radio" name="option"
-						value="${oneByOneQuestion.choice1}" />
+						value="${oneByOneQuestion.choice1}" checked="checked" />
 					<c:out value="${oneByOneQuestion.choice1}" />
 				</div>
+				</c:if>
+				<c:if test="${selectedChoice != oneByOneQuestion.choice1 || selectedChoice == null}">
+				<div class="options">
+					<label class="options-label">Option A : </label><input
+						class="options-input" type="radio" name="option"
+						value="${oneByOneQuestion.choice1}"/>
+					<c:out value="${oneByOneQuestion.choice1}" />
+				</div>
+				</c:if>
+								
+				<c:if test="${selectedChoice == oneByOneQuestion.choice2}">
 				<div class="options">
 					<label class="options-label">Option B : </label><input
 						class="options-input" type="radio" name="option"
-						value="${oneByOneQuestion.choice2}" />
+						value="${oneByOneQuestion.choice2}" checked="checked" />
 					<c:out value="${oneByOneQuestion.choice2}" />
 				</div>
+				</c:if>
+				<c:if test="${selectedChoice != oneByOneQuestion.choice2 || selectedChoice == null}">
+				<div class="options">
+					<label class="options-label">Option B : </label><input
+						class="options-input" type="radio" name="option"
+						value="${oneByOneQuestion.choice2}"/>
+					<c:out value="${oneByOneQuestion.choice2}" />
+				</div>
+				</c:if>
+								
+				<c:if test="${selectedChoice == oneByOneQuestion.choice3}">
 				<div class="options">
 					<label class="options-label">Option C : </label><input
 						class="options-input" type="radio" name="option"
-						value="${oneByOneQuestion.choice3}" />
+						value="${oneByOneQuestion.choice3}" checked="checked" />
 					<c:out value="${oneByOneQuestion.choice3}" />
 				</div>
+				</c:if>
+				<c:if test="${selectedChoice != oneByOneQuestion.choice3 || selectedChoice == null}">
+				<div class="options">
+					<label class="options-label">Option C : </label><input
+						class="options-input" type="radio" name="option"
+						value="${oneByOneQuestion.choice3}"/>
+					<c:out value="${oneByOneQuestion.choice3}" />
+				</div>
+				</c:if>
+				
+				
+								
+				<c:if test="${selectedChoice == oneByOneQuestion.choice4}">
 				<div class="options">
 					<label class="options-label">Option D : </label><input
 						class="options-input" type="radio" name="option"
-						value="${oneByOneQuestion.choice4}" />
+						value="${oneByOneQuestion.choice4}" checked="checked" />
 					<c:out value="${oneByOneQuestion.choice4}" />
 				</div>
+				</c:if>
+				<c:if test="${selectedChoice != oneByOneQuestion.choice4 || selectedChoice == null}">
+				<div class="options">
+					<label class="options-label">Option D : </label><input
+						class="options-input" type="radio" name="option"
+						value="${oneByOneQuestion.choice4}"/>
+					<c:out value="${oneByOneQuestion.choice4}" />
+				</div>
+				</c:if>
 			</div>
-			
+
 			<div class="operation-bar">
 				<c:if test="${ index == 0 }">
-				<input disabled="disabled" class="operation-bar-input-Previous" type="submit" name="operation" value="Previous" />
+					<input disabled="disabled" class="operation-bar-input-Previous"
+						type="submit" name="operation" value="Previous" />
 				</c:if>
 				<c:if test="${ index != 0 }">
-				<input class="operation-bar-input-Previous" type="submit" name="operation" value="Previous" />
+					<input class="operation-bar-input-Previous" type="submit"
+						name="operation" value="Previous" />
 				</c:if>
 				<c:if test="${ noOfQuestions == (index+1) }">
-				<input class="operation-bar-input-Next" disabled="disabled" type="submit" name="operation" value="Next" />
+					<input class="operation-bar-input-Next" disabled="disabled"
+						type="submit" name="operation" value="Next" />
 				</c:if>
 				<c:if test="${ noOfQuestions != (index+1) }">
-				<input class="operation-bar-input-Next" type="submit" name="operation" value="Next" />
+					<input class="operation-bar-input-Next" type="submit"
+						name="operation" value="Next" />
 				</c:if>
-				<input class="operation-bar-input-Save" type="submit" name="operation" value="Save" />
-				<input class="operation-bar-input-Submit" type="submit" name="operation" value="Submit" />
-				</div>
+				<input class="operation-bar-input-Save" type="submit"
+					name="operation" value="Save" /> <input
+					class="operation-bar-input-Submit" type="submit" id="submit-button"
+					name="operation" value="Submit" />
+			</div>
 		</form>
 	</div>
-	
-<script type="text/javascript">
-setInterval(displayTimeAndDate, 1);
-function displayTimeAndDate() {
-	var time= new Date();
-	var hrs = time.getHours();
-	var min = time.getMinutes();
-	var sec = time.getSeconds();
-	var year = time.getFullYear();
-	var month = time.getMonth();
-	var date = time.getDate();
-	var day = "GoodDay";
-	switch (time.getDay()) {
-	case 0:
-		day = "Sunday";
-		break;
-	case 1:
-		day = "Monday";
-		break;
-	case 2:
-		day = "Tuesday";
-		break;
-	case 3:
-		day = "Wednesday";
-		break;
-	case 4:
-		day = "Thursday";
-		break;
-	case 5:
-		day = "Friday";
-		break;
-	case 6:
-		day = "Saturday";
-		break;
 
-	default:
-		day = "GoodDay";
-		break;
-	}
-	
-	document.getElementById("time").innerHTML = "Time: " + hrs + ":" + min + ":" + sec;
-	document.getElementById("date").innerHTML = "Date: " + day + ", " + date + "/" + month + "/" + year;
-}
-</script>
+	<script type="text/javascript">
+		setInterval(displayTimeAndDate, 1);
+		function displayTimeAndDate() {
+			var time = new Date();
+			var hrs = time.getHours();
+			var min = time.getMinutes();
+			var sec = time.getSeconds();
+			var year = time.getFullYear();
+			var month = time.getMonth();
+			var date = time.getDate();
+			var currentTime = time.getTime();
+			var startTime = <%=request.getAttribute("startTime")%>;
+			var examDuration = <%=request.getAttribute("examDuration")%>;
+			var timeElapsed = currentTime - startTime;
+			var timeLeft = examDuration - timeElapsed;
+			var timeLeftinMins = Math.floor(timeLeft / 60000);
+			var timeLeftinSecs = Math
+					.floor((timeLeft - (timeLeftinMins * 60000)) / 1000);
+			var timeLeftinMiliSecs = timeLeft - (timeLeftinMins * 60000)
+					- (timeLeftinSecs * 1000);
+
+
+			if (timeElapsed == examDuration) {
+				document.getElementById('submit-button').click();
+			} else if(timeElapsed == examDuration+1){
+				document.getElementById('submit-button').click();				
+			} else if(timeElapsed == examDuration+2){
+				document.getElementById('submit-button').click();				
+			} else if(timeElapsed == examDuration+3){
+				document.getElementById('submit-button').click();				
+			} else if(timeElapsed == examDuration+4){
+				document.getElementById('submit-button').click();				
+			}
+			
+			if(timeElapsed < examDuration){
+			document.getElementById("time-left-h1").innerHTML = "Time Remaining: " + timeLeftinMins + " min " + timeLeftinSecs + " Sec ";
+			} else{
+				document.getElementById("time-left-h1").innerHTML = "Time Remaining: " + "00 min " + "00 Sec";				
+			}
+			var day = "GoodDay";
+			switch (time.getDay()) {
+			case 0:
+				day = "Sunday";
+				break;
+			case 1:
+				day = "Monday";
+				break;
+			case 2:
+				day = "Tuesday";
+				break;
+			case 3:
+				day = "Wednesday";
+				break;
+			case 4:
+				day = "Thursday";
+				break;
+			case 5:
+				day = "Friday";
+				break;
+			case 6:
+				day = "Saturday";
+				break;
+
+			default:
+				day = "GoodDay";
+				break;
+			}
+				document.getElementById("time").innerHTML = "Time: " + hrs
+						+ ":" + min + ":" + sec;
+				document.getElementById("date").innerHTML = "Date: " + day
+						+ ", " + date + "/" + month + "/" + year;
+		}
+	</script>
 
 </body>
 </html>
