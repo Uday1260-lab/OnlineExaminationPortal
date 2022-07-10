@@ -338,6 +338,46 @@ public class UserServlet extends HttpServlet {
 			}
 		}
 		else if (operation.equals("Submit")) {
+			String sessionId = request.getParameter("sessionId");
+			String name = request.getParameter("userName");
+			String email = request.getParameter("userEmail");
+			marks = 0;
+			request.setAttribute("marks", marks);
+			List<responses> responseList = new ArrayList<>();
+			// Step 1: Establishing a Connection
+			try (Connection connection = getConnection();
+
+					// Step 2:Create a statement using connection object
+				PreparedStatement preparedStatement = connection.prepareStatement("select * from results where sessionId=? and name=? and email=?;");) {
+				preparedStatement.setString(1, sessionId);
+				preparedStatement.setString(2, name);
+				preparedStatement.setString(3, email);
+				System.out.println(preparedStatement);
+				// Step 3: Execute the query or update query
+				ResultSet rs = preparedStatement.executeQuery();
+
+				// Step 4: Process the ResultSet object.
+				while (rs.next()) {
+					int resultId = rs.getInt("resultId");
+					String userName = rs.getString("name");
+					String userEmail = rs.getString("email");
+					String qid = rs.getString("qid");
+					String qTopic = rs.getString("qTopic");
+					String ques = rs.getString("ques");
+					String correctOption = rs.getString("correctOption");
+					String optionSelected = rs.getString("optionSelected");
+					String time = rs.getString("time");
+					if(correctOption.equals(optionSelected)) {
+						marks = marks +10;
+					}else if(!correctOption.equals(optionSelected)) {
+						marks = marks -5;
+					}
+					responseList.add(new responses(resultId, userName, userEmail, qid, qTopic, ques, correctOption, optionSelected, sessionId, time));
+				}
+				request.setAttribute("marks", marks);
+			} catch (SQLException e) {
+				printSQLException(e);
+			}
 			String passScore = "40";
 			int totalMarks = 10 * noOfQuestions;
 			int percentage = (marks * 100) / totalMarks;
@@ -390,14 +430,11 @@ public class UserServlet extends HttpServlet {
 				remark = "FAIL";
 				classSelector = "";
 			}
-			String name = request.getParameter("userName");
-			String email = request.getParameter("userEmail");
 			String qid = request.getParameter("questionId");
 			String qTopic = request.getParameter("questionTopic");
 			String ques = request.getParameter("question");
 			String time = request.getParameter("time");
 			String optionSelected = request.getParameter("option");
-			String sessionId = request.getParameter("sessionId");
 			String correctOption = request.getParameter("answer");
 			System.out.println("time: "+ time);
 			System.out.println("name: " + name);
